@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#120c19">
+  <title>OnionDrop</title>
+  <link rel="icon" href="{{ url_for('static', filename='logo.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='0.1.0-aboutfix') }}">
+</head>
+<body data-mock="{{ 'true' if mock else 'false' }}">
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="OnionDrop home">
+        <img src="{{ url_for('static', filename='logo.svg') }}" alt="">
+        <span><strong>Onion</strong>Drop</span>
+      </a>
+      <nav>
+        <button class="nav-item active" data-view="inboxes"><span>◉</span> Inboxes</button>
+        <button class="nav-item" data-view="files"><span>↓</span> Received files</button>
+        <button class="nav-item" data-view="about"><span>?</span> About</button>
+      </nav>
+      <div class="engine-card">
+        <span class="engine-dot"></span>
+        <div>
+          <small>Transfer engine</small>
+          <strong>OnionShare {{ onionshare_version }}</strong>
+        </div>
+      </div>
+      <div class="sidebar-footer">OnionDrop {{ version }}</div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div class="topbar-label">
+          <p class="eyebrow">PRIVATE FILE INTAKE</p>
+        </div>
+        <div class="top-actions">
+          <button id="importButton" class="button ghost">Import OnionShare</button>
+          <button id="createButton" class="button primary"><span>＋</span> New inbox</button>
+        </div>
+      </header>
+
+      <section id="inboxesView" class="view active">
+        <div class="stats-grid">
+          <article class="stat-card"><span>Active services</span><strong id="activeCount">0</strong><small>Reachable through Tor</small></article>
+          <article class="stat-card"><span>Received files</span><strong id="fileCount">0</strong><small>Stored only on Umbrel</small></article>
+          <article class="stat-card"><span>Storage used</span><strong id="storageUsed">0 B</strong><small>Across every inbox</small></article>
+        </div>
+        <div class="section-heading">
+          <div><p class="eyebrow">YOUR ONION SERVICES</p><h2>Private inboxes</h2></div>
+          <button id="refreshButton" class="icon-button" title="Refresh">↻</button>
+        </div>
+        <div id="inboxGrid" class="inbox-grid"></div>
+        <div id="emptyState" class="empty-state hidden">
+          <div class="empty-onion"><img src="{{ url_for('static', filename='logo.svg') }}" alt=""></div>
+          <h3>Create your first private doorway</h3>
+          <p>OnionDrop creates a persistent OnionShare receive service and stores every submission directly on this Umbrel.</p>
+          <button class="button primary" data-create>Build an inbox</button>
+        </div>
+      </section>
+
+      <section id="filesView" class="view">
+        <div class="section-heading files-heading">
+          <div><p class="eyebrow">LOCAL STORAGE</p><h2>Received files</h2></div>
+          <select id="fileInboxSelect" class="select"></select>
+        </div>
+        <div class="panel file-panel">
+          <div class="file-table-header"><span>Name</span><span>Received</span><span>Size</span><span></span></div>
+          <div id="fileList"></div>
+          <div id="noFiles" class="mini-empty">No files have arrived in this inbox.</div>
+        </div>
+      </section>
+
+      <section id="aboutView" class="view">
+        <div class="about-simple">
+          <p class="eyebrow">ABOUT ONIONDROP</p>
+          <h2>OnionDrop</h2>
+          <p class="about-description">OnionDrop runs official OnionShare receive services on your Umbrel. It creates persistent private inboxes that people can open in Tor Browser to send files or messages directly to your device.</p>
+
+          <dl class="about-meta">
+            <div>
+              <dt>Version</dt>
+              <dd>{{ version }}</dd>
+            </div>
+            <div>
+              <dt>Status</dt>
+              <dd class="about-status"><span></span> Ready</dd>
+            </div>
+            <div>
+              <dt>Transfer engine</dt>
+              <dd>OnionShare {{ onionshare_version }}</dd>
+            </div>
+          </dl>
+
+          <p class="about-note"><strong>Privacy note:</strong> Uploads travel through an onion service and are stored locally on this Umbrel. Treat files from unknown senders as untrusted.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="createDialog" class="modal">
+    <form id="createForm" method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">NEW ONION SERVICE</p><h2>Create an inbox</h2></div><button type="button" class="close" data-close>×</button></div>
+      <label>Inbox name<input name="name" maxlength="80" required placeholder="Project files"></label>
+      <label>Short note<input name="description" maxlength="240" placeholder="What should people send here?"></label>
+      <div class="choice-grid">
+        <label class="choice"><input type="checkbox" name="allow_files" checked><span><b>Files</b><small>Accept uploaded documents</small></span></label>
+        <label class="choice"><input type="checkbox" name="allow_text" checked><span><b>Messages</b><small>Accept anonymous text</small></span></label>
+      </div>
+      <div class="two-cols">
+        <label>Lifetime<select name="expires_hours"><option value="0">Never expires</option><option value="1">1 hour</option><option value="24">24 hours</option><option value="168">7 days</option><option value="720">30 days</option></select></label>
+        <label>Storage stop<select name="quota_mb"><option value="0">No soft limit</option><option value="512">512 MB</option><option value="2048">2 GB</option><option value="10240">10 GB</option></select></label>
+      </div>
+      <label class="switch-row"><span><b>Require OnionShare private key</b><small>Recommended. Public services can be opened by anyone who knows the address.</small></span><input type="checkbox" name="private" checked></label>
+      <label class="switch-row"><span><b>Start with OnionDrop</b><small>Bring this inbox back online after an app restart.</small></span><input type="checkbox" name="autostart" checked></label>
+      <div class="modal-actions"><button type="button" class="button ghost" data-close>Cancel</button><button type="submit" class="button primary">Create private inbox</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="importDialog" class="modal small-modal">
+    <form id="importForm" method="dialog" enctype="multipart/form-data">
+      <div class="modal-head"><div><p class="eyebrow">PORTABLE SERVICE</p><h2>Import OnionShare</h2></div><button type="button" class="close" data-close>×</button></div>
+      <p class="modal-copy">Choose a persistent OnionShare JSON file created in receive mode. OnionDrop preserves its onion identity and redirects future uploads into this app.</p>
+      <label>Optional display name<input name="name" maxlength="80" placeholder="Imported inbox"></label>
+      <label class="file-picker"><input type="file" name="config" accept="application/json,.json" required><span>Choose OnionShare JSON</span></label>
+      <div class="modal-actions"><button type="button" class="button ghost" data-close>Cancel</button><button type="submit" class="button primary">Import service</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="detailsDialog" class="modal details-modal">
+    <div id="detailsContent"></div>
+  </dialog>
+
+  <dialog id="qrDialog" class="modal qr-modal">
+    <button type="button" class="close qr-close" data-close>×</button>
+    <p class="eyebrow" id="qrLabel">ONION ADDRESS</p>
+    <div class="qr-wrap"><img id="qrImage" alt="QR code"></div>
+    <p id="qrValue" class="qr-value"></p>
+  </dialog>
+
+  <div id="toast" class="toast"></div>
+  <script src="{{ url_for('static', filename='app.js', v='0.1.0-copyfix') }}" defer></script>
+</body>
+</html>

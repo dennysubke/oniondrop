@@ -1,0 +1,15 @@
+services:
+  oniondrop:
+    build:
+      context: .
+      args:
+        ONIONSHARE_VERSION: 2.6.4
+    ports:
+      - "8397:8080"
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      ONIONDROP_MOCK: "false"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
