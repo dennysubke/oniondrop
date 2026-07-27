@@ -6,7 +6,7 @@ OnionDrop is a persistent, OnionShare-compatible file intake app designed for Um
   <img src="oniondrop/static/banner.png" alt="OnionDrop Banner" width="100%">
 </p>
 
-## What version 0.1.0 includes
+## Key features
 
 - Multiple persistent OnionShare receive services (up to four active by default)
 - Private-key-protected or public onion services
