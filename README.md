@@ -2,6 +2,10 @@
 
 OnionDrop is a persistent, OnionShare-compatible file intake app designed for Umbrel. It wraps the official OnionShare CLI receive mode in a dedicated Tor-style web interface and keeps each receive service, onion identity, private access key, log, and uploaded file in persistent storage.
 
+<p align="center">
+  <img src="oniondrop/static/banner.png" alt="OnionDrop Banner" width="100%">
+</p>
+
 ## What version 0.1.0 includes
 
 - Multiple persistent OnionShare receive services (up to four active by default)
