@@ -1,14 +1,10 @@
-<p align="center">
-  <img src="oniondrop/static/banner.png" alt="OnionDrop banner" width="100%">
-</p>
-
 # OnionDrop
-
-**A private file drop powered by OnionShare.**
 
 OnionDrop is a self-hosted web interface for creating and managing persistent OnionShare receive services. It runs independently on any compatible Docker host, publishes real `.onion` inboxes through the official OnionShare CLI, and stores received content only in the local data directory you mount.
 
-Version **0.2.0** is platform-neutral. Umbrel is supported through an optional package, but it is no longer required by the application.
+<p align="center">
+  <img src="oniondrop/static/banner.png" alt="OnionDrop banner" width="100%">
+</p>
 
 ## Features at a glance
 
