@@ -4,98 +4,178 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#120c19">
+  <meta name="color-scheme" content="dark">
   <title>OnionDrop</title>
   <link rel="icon" href="{{ url_for('static', filename='logo.svg') }}" type="image/svg+xml">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v='0.1.0-aboutfix') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css', v=version) }}">
 </head>
-<body data-mock="{{ 'true' if mock else 'false' }}">
+<body data-version="{{ version }}" data-onionshare-version="{{ onionshare_version }}" data-mock="{{ 'true' if mock else 'false' }}">
   <div class="ambient ambient-one"></div>
   <div class="ambient ambient-two"></div>
-  <div class="shell">
+
+  <section id="authScreen" class="auth-screen hidden" aria-live="polite">
+    <div class="auth-toolbar">
+      <select class="language-select compact" aria-label="Language"></select>
+    </div>
+    <div class="auth-card">
+      <a class="brand auth-brand" href="/" aria-label="OnionDrop">
+        <img src="{{ url_for('static', filename='logo.svg') }}" alt="">
+        <span><strong>Onion</strong>Drop</span>
+      </a>
+
+      <form id="setupForm" class="auth-form hidden">
+        <p class="eyebrow" data-i18n="setup_eyebrow"></p>
+        <h1 data-i18n="setup_title"></h1>
+        <p class="auth-copy" data-i18n="setup_copy"></p>
+        <label><span data-i18n="default_language"></span><select name="default_language" class="language-select"></select></label>
+        <label class="switch-row auth-choice">
+          <span><b data-i18n="enable_login"></b><small data-i18n="enable_login_help"></small></span>
+          <input type="checkbox" name="auth_enabled">
+        </label>
+        <div id="setupCredentials" class="credential-fields hidden">
+          <label><span data-i18n="username"></span><input name="username" value="admin" maxlength="40" autocomplete="username"></label>
+          <label><span data-i18n="password"></span><input name="password" type="password" minlength="10" maxlength="256" autocomplete="new-password"></label>
+          <small class="field-help" data-i18n="password_help"></small>
+        </div>
+        <button class="button primary wide" type="submit" data-i18n="finish_setup"></button>
+      </form>
+
+      <form id="loginForm" class="auth-form hidden">
+        <p class="eyebrow" data-i18n="login_eyebrow"></p>
+        <h1 data-i18n="login_title"></h1>
+        <p class="auth-copy" data-i18n="login_copy"></p>
+        <label><span data-i18n="username"></span><input name="username" value="admin" maxlength="40" autocomplete="username" required></label>
+        <label><span data-i18n="password"></span><input name="password" type="password" maxlength="256" autocomplete="current-password" required></label>
+        <button class="button primary wide" type="submit" data-i18n="sign_in"></button>
+      </form>
+    </div>
+  </section>
+
+  <div id="appShell" class="shell hidden">
     <aside class="sidebar">
       <a class="brand" href="#" aria-label="OnionDrop home">
         <img src="{{ url_for('static', filename='logo.svg') }}" alt="">
         <span><strong>Onion</strong>Drop</span>
       </a>
       <nav>
-        <button class="nav-item active" data-view="inboxes"><span>◉</span> Inboxes</button>
-        <button class="nav-item" data-view="files"><span>↓</span> Received files</button>
-        <button class="nav-item" data-view="about"><span>?</span> About</button>
+        <button class="nav-item active" data-view="inboxes"><span>◉</span><b data-i18n="nav_inboxes"></b></button>
+        <button class="nav-item" data-view="files"><span>↓</span><b data-i18n="nav_files"></b></button>
+        <button class="nav-item" data-view="settings"><span>⚙</span><b data-i18n="nav_settings"></b></button>
+        <button class="nav-item" data-view="about"><span>?</span><b data-i18n="nav_about"></b></button>
       </nav>
-      <div class="engine-card">
-        <span class="engine-dot"></span>
+      <div id="engineCard" class="engine-card tor-idle">
+        <div class="mini-tor-orb"><span></span></div>
         <div>
-          <small>Transfer engine</small>
-          <strong>OnionShare {{ onionshare_version }}</strong>
+          <small data-i18n="tor_network"></small>
+          <strong id="sidebarTorText" data-i18n="tor_idle"></strong>
         </div>
       </div>
+      <button id="logoutButton" class="sidebar-link hidden" data-i18n="sign_out"></button>
       <div class="sidebar-footer">OnionDrop {{ version }}</div>
     </aside>
 
     <main>
       <header class="topbar">
-        <div class="topbar-label">
-          <p class="eyebrow">PRIVATE FILE INTAKE</p>
-        </div>
+        <div class="topbar-label"><p id="viewEyebrow" class="eyebrow" data-i18n="private_file_intake"></p></div>
         <div class="top-actions">
-          <button id="importButton" class="button ghost">Import OnionShare</button>
-          <button id="createButton" class="button primary"><span>＋</span> New inbox</button>
+          <div id="torPill" class="tor-pill tor-idle" title="Tor">
+            <div class="tor-orb"><span></span><i></i></div>
+            <div><small data-i18n="tor_network"></small><strong id="torPillText" data-i18n="tor_idle"></strong></div>
+          </div>
+          <select class="language-select compact" aria-label="Language"></select>
+          <button id="importButton" class="button ghost"><span data-i18n="import_onionshare"></span></button>
+          <button id="createButton" class="button primary"><span>＋</span><b data-i18n="new_inbox"></b></button>
         </div>
       </header>
 
       <section id="inboxesView" class="view active">
+        <div id="torStatusPanel" class="tor-status-panel tor-idle">
+          <div class="tor-visual"><div class="tor-rings"><i></i><i></i><i></i><span></span></div></div>
+          <div class="tor-status-copy">
+            <p class="eyebrow" data-i18n="tor_connection"></p>
+            <h2 id="torStatusTitle" data-i18n="tor_idle_title"></h2>
+            <p id="torStatusDescription" data-i18n="tor_idle_description"></p>
+          </div>
+          <div class="tor-status-meta">
+            <span><small data-i18n="progress"></small><b id="torProgress">0%</b></span>
+            <span><small data-i18n="active_services"></small><b id="torActiveServices">0</b></span>
+            <span><small data-i18n="tor_version"></small><b id="torVersion">—</b></span>
+          </div>
+        </div>
+
         <div class="stats-grid">
-          <article class="stat-card"><span>Active services</span><strong id="activeCount">0</strong><small>Reachable through Tor</small></article>
-          <article class="stat-card"><span>Received files</span><strong id="fileCount">0</strong><small>Stored only on Umbrel</small></article>
-          <article class="stat-card"><span>Storage used</span><strong id="storageUsed">0 B</strong><small>Across every inbox</small></article>
+          <article class="stat-card"><span data-i18n="active_services"></span><strong id="activeCount">0</strong><small data-i18n="reachable_through_tor"></small></article>
+          <article class="stat-card"><span data-i18n="received_files"></span><strong id="fileCount">0</strong><small data-i18n="stored_locally"></small></article>
+          <article class="stat-card"><span data-i18n="storage_used"></span><strong id="storageUsed">0 B</strong><small data-i18n="across_inboxes"></small></article>
         </div>
         <div class="section-heading">
-          <div><p class="eyebrow">YOUR ONION SERVICES</p><h2>Private inboxes</h2></div>
-          <button id="refreshButton" class="icon-button" title="Refresh">↻</button>
+          <div><p class="eyebrow" data-i18n="your_onion_services"></p><h2 data-i18n="private_inboxes"></h2></div>
+          <button id="refreshButton" class="icon-button" data-i18n-title="refresh" title="Refresh">↻</button>
         </div>
         <div id="inboxGrid" class="inbox-grid"></div>
         <div id="emptyState" class="empty-state hidden">
           <div class="empty-onion"><img src="{{ url_for('static', filename='logo.svg') }}" alt=""></div>
-          <h3>Create your first private doorway</h3>
-          <p>OnionDrop creates a persistent OnionShare receive service and stores every submission directly on this Umbrel.</p>
-          <button class="button primary" data-create>Build an inbox</button>
+          <h3 data-i18n="empty_inbox_title"></h3>
+          <p data-i18n="empty_inbox_copy"></p>
+          <button class="button primary" data-create data-i18n="build_inbox"></button>
         </div>
       </section>
 
       <section id="filesView" class="view">
         <div class="section-heading files-heading">
-          <div><p class="eyebrow">LOCAL STORAGE</p><h2>Received files</h2></div>
+          <div><p class="eyebrow" data-i18n="local_storage"></p><h2 data-i18n="received_files"></h2></div>
           <select id="fileInboxSelect" class="select"></select>
         </div>
-        <div class="panel file-panel">
-          <div class="file-table-header"><span>Name</span><span>Received</span><span>Size</span><span></span></div>
-          <div id="fileList"></div>
-          <div id="noFiles" class="mini-empty">No files have arrived in this inbox.</div>
+        <div class="file-toolbar panel-subtle">
+          <label class="select-all"><input id="selectAllFiles" type="checkbox"><span data-i18n="select_all"></span></label>
+          <span id="selectedFileCount" data-i18n="no_files_selected"></span>
+          <button id="downloadZipButton" class="button ghost" disabled><span>↓</span><b data-i18n="download_zip"></b></button>
         </div>
+        <div class="panel file-panel">
+          <div class="file-table-header"><span></span><span data-i18n="name"></span><span data-i18n="received"></span><span data-i18n="size"></span><span>SHA-256</span><span></span></div>
+          <div id="fileList"></div>
+          <div id="noFiles" class="mini-empty" data-i18n="no_files"></div>
+        </div>
+      </section>
+
+      <section id="settingsView" class="view">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="configuration"></p><h2 data-i18n="settings_title"></h2></div></div>
+        <form id="settingsForm" class="settings-form">
+          <section class="settings-section">
+            <h3 data-i18n="access_protection"></h3>
+            <p data-i18n="access_protection_copy"></p>
+            <label class="switch-row">
+              <span><b data-i18n="enable_login"></b><small data-i18n="enable_login_settings_help"></small></span>
+              <input type="checkbox" name="auth_enabled">
+            </label>
+            <div class="two-cols settings-grid">
+              <label><span data-i18n="username"></span><input name="username" maxlength="40" autocomplete="username"></label>
+              <label><span data-i18n="new_password"></span><input name="new_password" type="password" minlength="10" maxlength="256" autocomplete="new-password" placeholder="••••••••••"></label>
+            </div>
+            <label id="currentPasswordLabel" class="hidden"><span data-i18n="current_password"></span><input name="current_password" type="password" maxlength="256" autocomplete="current-password"></label>
+            <small class="field-help" data-i18n="password_optional_help"></small>
+          </section>
+          <section class="settings-section">
+            <h3 data-i18n="language_region"></h3>
+            <p data-i18n="language_region_copy"></p>
+            <label><span data-i18n="default_language"></span><select name="default_language" class="language-select"></select></label>
+          </section>
+          <div class="settings-actions"><button type="submit" class="button primary" data-i18n="save_settings"></button></div>
+        </form>
       </section>
 
       <section id="aboutView" class="view">
         <div class="about-simple">
-          <p class="eyebrow">ABOUT ONIONDROP</p>
+          <p class="eyebrow" data-i18n="about_oniondrop"></p>
           <h2>OnionDrop</h2>
-          <p class="about-description">OnionDrop runs official OnionShare receive services on your Umbrel. It creates persistent private inboxes that people can open in Tor Browser to send files or messages directly to your device.</p>
-
+          <p class="about-description" data-i18n="about_description"></p>
           <dl class="about-meta">
-            <div>
-              <dt>Version</dt>
-              <dd>{{ version }}</dd>
-            </div>
-            <div>
-              <dt>Status</dt>
-              <dd class="about-status"><span></span> Ready</dd>
-            </div>
-            <div>
-              <dt>Transfer engine</dt>
-              <dd>OnionShare {{ onionshare_version }}</dd>
-            </div>
+            <div><dt data-i18n="version"></dt><dd>{{ version }}</dd></div>
+            <div><dt data-i18n="status"></dt><dd class="about-status"><span></span><b data-i18n="ready"></b></dd></div>
+            <div><dt data-i18n="transfer_engine"></dt><dd>OnionShare {{ onionshare_version }}</dd></div>
+            <div><dt data-i18n="platform"></dt><dd data-i18n="platform_independent"></dd></div>
           </dl>
-
-          <p class="about-note"><strong>Privacy note:</strong> Uploads travel through an onion service and are stored locally on this Umbrel. Treat files from unknown senders as untrusted.</p>
+          <p class="about-note"><strong data-i18n="privacy_note"></strong> <span data-i18n="privacy_note_copy"></span></p>
         </div>
       </section>
     </main>
@@ -103,45 +183,50 @@
 
   <dialog id="createDialog" class="modal">
     <form id="createForm" method="dialog">
-      <div class="modal-head"><div><p class="eyebrow">NEW ONION SERVICE</p><h2>Create an inbox</h2></div><button type="button" class="close" data-close>×</button></div>
-      <label>Inbox name<input name="name" maxlength="80" required placeholder="Project files"></label>
-      <label>Short note<input name="description" maxlength="240" placeholder="What should people send here?"></label>
+      <div class="modal-head"><div><p class="eyebrow" data-i18n="new_onion_service"></p><h2 data-i18n="create_inbox"></h2></div><button type="button" class="close" data-close>×</button></div>
+      <label><span data-i18n="inbox_name"></span><input name="name" maxlength="80" required data-i18n-placeholder="inbox_name_placeholder"></label>
+      <label><span data-i18n="short_note"></span><input name="description" maxlength="240" data-i18n-placeholder="short_note_placeholder"></label>
       <div class="choice-grid">
-        <label class="choice"><input type="checkbox" name="allow_files" checked><span><b>Files</b><small>Accept uploaded documents</small></span></label>
-        <label class="choice"><input type="checkbox" name="allow_text" checked><span><b>Messages</b><small>Accept anonymous text</small></span></label>
+        <label class="choice"><input type="checkbox" name="allow_files" checked><span><b data-i18n="files"></b><small data-i18n="accept_files"></small></span></label>
+        <label class="choice"><input type="checkbox" name="allow_text" checked><span><b data-i18n="messages"></b><small data-i18n="accept_messages"></small></span></label>
       </div>
       <div class="two-cols">
-        <label>Lifetime<select name="expires_hours"><option value="0">Never expires</option><option value="1">1 hour</option><option value="24">24 hours</option><option value="168">7 days</option><option value="720">30 days</option></select></label>
-        <label>Storage stop<select name="quota_mb"><option value="0">No soft limit</option><option value="512">512 MB</option><option value="2048">2 GB</option><option value="10240">10 GB</option></select></label>
+        <label><span data-i18n="lifetime"></span><select name="expires_hours"><option value="0" data-i18n="never_expires"></option><option value="1" data-i18n="one_hour"></option><option value="24" data-i18n="twenty_four_hours"></option><option value="168" data-i18n="seven_days"></option><option value="720" data-i18n="thirty_days"></option></select></label>
+        <label><span data-i18n="storage_stop"></span><select name="quota_mb"><option value="0" data-i18n="no_soft_limit"></option><option value="512">512 MB</option><option value="2048">2 GB</option><option value="10240">10 GB</option></select></label>
       </div>
-      <label class="switch-row"><span><b>Require OnionShare private key</b><small>Recommended. Public services can be opened by anyone who knows the address.</small></span><input type="checkbox" name="private" checked></label>
-      <label class="switch-row"><span><b>Start with OnionDrop</b><small>Bring this inbox back online after an app restart.</small></span><input type="checkbox" name="autostart" checked></label>
-      <div class="modal-actions"><button type="button" class="button ghost" data-close>Cancel</button><button type="submit" class="button primary">Create private inbox</button></div>
+      <label class="switch-row"><span><b data-i18n="require_private_key"></b><small data-i18n="require_private_key_help"></small></span><input type="checkbox" name="private" checked></label>
+      <label class="switch-row"><span><b data-i18n="start_with_oniondrop"></b><small data-i18n="start_with_oniondrop_help"></small></span><input type="checkbox" name="autostart" checked></label>
+      <div class="modal-actions"><button type="button" class="button ghost" data-close data-i18n="cancel"></button><button type="submit" class="button primary" data-i18n="create_private_inbox"></button></div>
     </form>
   </dialog>
 
   <dialog id="importDialog" class="modal small-modal">
     <form id="importForm" method="dialog" enctype="multipart/form-data">
-      <div class="modal-head"><div><p class="eyebrow">PORTABLE SERVICE</p><h2>Import OnionShare</h2></div><button type="button" class="close" data-close>×</button></div>
-      <p class="modal-copy">Choose a persistent OnionShare JSON file created in receive mode. OnionDrop preserves its onion identity and redirects future uploads into this app.</p>
-      <label>Optional display name<input name="name" maxlength="80" placeholder="Imported inbox"></label>
-      <label class="file-picker"><input type="file" name="config" accept="application/json,.json" required><span>Choose OnionShare JSON</span></label>
-      <div class="modal-actions"><button type="button" class="button ghost" data-close>Cancel</button><button type="submit" class="button primary">Import service</button></div>
+      <div class="modal-head"><div><p class="eyebrow" data-i18n="portable_service"></p><h2 data-i18n="import_onionshare"></h2></div><button type="button" class="close" data-close>×</button></div>
+      <p class="modal-copy" data-i18n="import_copy"></p>
+      <label><span data-i18n="optional_display_name"></span><input name="name" maxlength="80" data-i18n-placeholder="imported_inbox"></label>
+      <label class="file-picker"><input type="file" name="config" accept="application/json,.json" required><span data-i18n="choose_json"></span></label>
+      <div class="modal-actions"><button type="button" class="button ghost" data-close data-i18n="cancel"></button><button type="submit" class="button primary" data-i18n="import_service"></button></div>
     </form>
   </dialog>
 
-  <dialog id="detailsDialog" class="modal details-modal">
-    <div id="detailsContent"></div>
-  </dialog>
+  <dialog id="detailsDialog" class="modal details-modal"><div id="detailsContent"></div></dialog>
 
   <dialog id="qrDialog" class="modal qr-modal">
     <button type="button" class="close qr-close" data-close>×</button>
-    <p class="eyebrow" id="qrLabel">ONION ADDRESS</p>
+    <p class="eyebrow" id="qrLabel"></p>
     <div class="qr-wrap"><img id="qrImage" alt="QR code"></div>
     <p id="qrValue" class="qr-value"></p>
+    <a id="qrDownload" class="button primary wide" download data-i18n="download_qr_png"></a>
+  </dialog>
+
+  <dialog id="previewDialog" class="modal preview-modal">
+    <div class="preview-head"><div><p class="eyebrow" data-i18n="file_preview"></p><h2 id="previewTitle"></h2><small id="previewMeta"></small></div><button type="button" class="close" data-close>×</button></div>
+    <div id="previewBody" class="preview-body"></div>
+    <div class="preview-actions"><a id="previewDownload" class="button ghost" download data-i18n="download_file"></a></div>
   </dialog>
 
   <div id="toast" class="toast"></div>
-  <script src="{{ url_for('static', filename='app.js', v='0.1.0-copyfix') }}" defer></script>
+  <script src="{{ url_for('static', filename='app.js', v=version) }}" defer></script>
 </body>
 </html>

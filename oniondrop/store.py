@@ -10,12 +10,14 @@ from typing import Any
 
 
 class JsonStore:
+    """Small atomic JSON store for OnionDrop inbox metadata."""
+
     def __init__(self, path: Path):
         self.path = path
         self.lock = threading.RLock()
         self.path.parent.mkdir(parents=True, exist_ok=True)
         if not self.path.exists():
-            self._write({"version": 1, "inboxes": []})
+            self._write({"version": 2, "inboxes": []})
 
     def _read(self) -> dict[str, Any]:
         try:
@@ -23,9 +25,10 @@ class JsonStore:
                 payload = json.load(handle)
             if not isinstance(payload, dict) or not isinstance(payload.get("inboxes"), list):
                 raise ValueError("Invalid state structure")
+            payload.setdefault("version", 2)
             return payload
         except (OSError, ValueError, json.JSONDecodeError):
-            return {"version": 1, "inboxes": []}
+            return {"version": 2, "inboxes": []}
 
     def _write(self, payload: dict[str, Any]) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
@@ -36,6 +39,10 @@ class JsonStore:
                 handle.flush()
                 os.fsync(handle.fileno())
             os.replace(tmp_name, self.path)
+            try:
+                self.path.chmod(0o600)
+            except OSError:
+                pass
         finally:
             if os.path.exists(tmp_name):
                 os.unlink(tmp_name)
@@ -46,18 +53,17 @@ class JsonStore:
 
     def get(self, inbox_id: str) -> dict[str, Any] | None:
         with self.lock:
-            return next((deepcopy(item) for item in self._read()["inboxes"] if item["id"] == inbox_id), None)
+            return next((deepcopy(item) for item in self._read()["inboxes"] if item.get("id") == inbox_id), None)
 
     def put(self, inbox: dict[str, Any]) -> dict[str, Any]:
         with self.lock:
             payload = self._read()
-            replaced = False
+            payload["version"] = 2
             for index, existing in enumerate(payload["inboxes"]):
-                if existing["id"] == inbox["id"]:
+                if existing.get("id") == inbox.get("id"):
                     payload["inboxes"][index] = deepcopy(inbox)
-                    replaced = True
                     break
-            if not replaced:
+            else:
                 payload["inboxes"].append(deepcopy(inbox))
             self._write(payload)
             return deepcopy(inbox)
@@ -66,8 +72,9 @@ class JsonStore:
         with self.lock:
             payload = self._read()
             original = len(payload["inboxes"])
-            payload["inboxes"] = [item for item in payload["inboxes"] if item["id"] != inbox_id]
+            payload["inboxes"] = [item for item in payload["inboxes"] if item.get("id") != inbox_id]
             if len(payload["inboxes"]) == original:
                 return False
+            payload["version"] = 2
             self._write(payload)
             return True

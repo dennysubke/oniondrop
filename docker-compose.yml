@@ -2,10 +2,10 @@ version: "3.7"
 
 services:
   oniondrop:
-    build:
-      context: .
-      args:
-        ONIONSHARE_VERSION: "2.6.4"
+    image: dennysubke/oniondrop:0.2.0
+    container_name: oniondrop
+    restart: unless-stopped
+    stop_grace_period: 30s
     ports:
       - "8397:8080"
     environment:
@@ -13,8 +13,8 @@ services:
       PGID: "1000"
       ONIONDROP_DATA_DIR: /data
       ONIONDROP_PORT: "8080"
-      ONIONDROP_MOCK: "true"
-      ONIONDROP_AUTH_MODE: disabled
+      ONIONDROP_AUTH_MODE: setup
       ONIONDROP_DEFAULT_LANGUAGE: en
+      ONIONSHARE_VERSION: "2.6.4"
     volumes:
       - ./data:/data

@@ -22,8 +22,8 @@ RUN python -m venv /opt/venv \
 FROM python:${PYTHON_VERSION}-slim-bookworm
 ARG ONIONSHARE_VERSION
 LABEL org.opencontainers.image.title="OnionDrop" \
-      org.opencontainers.image.description="A persistent OnionShare-compatible dropbox for Umbrel" \
-      org.opencontainers.image.version="0.1.0" \
+      org.opencontainers.image.description="A self-hosted manager for persistent OnionShare receive services" \
+      org.opencontainers.image.version="0.2.0" \
       org.opencontainers.image.licenses="GPL-3.0-or-later" \
       org.opencontainers.image.source="https://github.com/dennysubke/oniondrop"
 ENV PATH="/opt/venv/bin:$PATH" \
@@ -32,6 +32,8 @@ ENV PATH="/opt/venv/bin:$PATH" \
     ONIONDROP_DATA_DIR=/data \
     ONIONDROP_HOST=0.0.0.0 \
     ONIONDROP_PORT=8080 \
+    ONIONDROP_AUTH_MODE=setup \
+    ONIONDROP_DEFAULT_LANGUAGE=en \
     ONIONSHARE_VERSION=${ONIONSHARE_VERSION} \
     HOME=/data/home
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -49,5 +51,5 @@ RUN chmod +x /usr/local/bin/oniondrop-entrypoint \
 EXPOSE 8080
 VOLUME ["/data"]
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/oniondrop-entrypoint"]
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=5 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=25s --retries=5 \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/api/health', timeout=3)" || exit 1
