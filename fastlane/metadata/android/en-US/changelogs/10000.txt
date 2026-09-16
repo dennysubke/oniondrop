@@ -1,0 +1,1 @@
+Initial stable Android release with embedded Tor, private send/receive links, QR codes, local file management, UI alignment fixes and eight interface languages.
