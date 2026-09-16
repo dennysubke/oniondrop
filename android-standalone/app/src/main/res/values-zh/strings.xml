@@ -1,11 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="about_desc">关于 OnionDrop</string><string name="status_connected">TOR 已连接</string><string name="status_stopping">TOR 正在停止</string><string name="status_connecting">正在连接 TOR</string><string name="status_ready">随时可以开始</string>
-    <string name="hero_ready">你的 Drop 已准备好。</string><string name="hero_idle_title">你的 Drop。\n由你掌控。</string><string name="hero_idle_subtitle">直接发送和接收文件。\n无需账户。无需云端。</string><string name="auto_end">将在 %1$s 后自动结束</string><string name="stop_shares">停止共享</string>
-    <string name="send_files">发送文件</string><string name="send_subtitle">直接从你的手机发送。</string><string name="receive_files">接收文件</string><string name="receive_subtitle">你的私人收件箱。</string><string name="local_only">直接通过 Tor · 一切都保留在你的设备上</string>
-    <string name="send_eyebrow">发送</string><string name="send_title">你的文件。\n你的链接。</string><string name="send_intro">选择要共享的内容。只有这些文件可通过你的链接访问。</string><string name="send_question">你想共享什么？</string><string name="send_add_more">还要添加其他内容吗？</string><string name="file_limit">每个文件最多 250 MiB</string><string name="choose_files">选择文件</string><string name="start_share">开始共享</string><string name="selected_files">已选择 %1$d 个文件</string><string name="empty_selected_title">尚未选择任何文件。</string><string name="empty_selected_subtitle">在开始共享之前，你的文件会保持私密。</string>
-    <string name="receive_eyebrow">接收</string><string name="receive_title">你的私人收件箱。</string><string name="receive_intro">分享你的接收链接。其他人可以直接向你的手机发送文件。</string><string name="start_receive">开始接收</string><string name="received_files">已接收 %1$d 个文件</string><string name="empty_receive_title">你的下一个 Drop 会出现在这里。</string><string name="empty_receive_subtitle">接收的文件只保存在应用内部。</string>
-    <string name="link_ready">你的链接已准备好</string><string name="tor_progress">%1$d %% · 正在连接 Tor</string><string name="copy">复制</string><string name="share">分享</string><string name="stop_all">停止全部共享</string><string name="nav_overview">概览</string><string name="nav_send">发送</string><string name="nav_receive">接收</string><string name="cancel">取消</string><string name="close">关闭</string><string name="tor_starting">正在启动 Tor …</string><string name="stop">停止</string><string name="copied">已复制。</string><string name="private_link">你的私人链接</string>
-    <string name="about_message">版本 %1$s\n\nTor 和文件传输都在你的手机上运行。不需要服务器、Umbrel 或 Orbot。\n\n会话会在 30 分钟后结束。Android 或连接中断可能会提前结束会话。接收链接需要在 Tor Browser 中启用 JavaScript。\n\n每个文件 250 MiB · 每个区域最多 1 GiB 和 100 个文件。内容保存在应用的私有存储中，卸载应用时会被删除。</string><string name="understood">知道了</string>
-    <string name="channel_name">活动文件传输</string><string name="channel_desc">显示 OnionDrop 何时可通过 Tor 访问。</string><string name="tor_connecting_message">正在连接 Tor …</string><string name="phone_reachable">你的手机可通过 Tor 访问</string><string name="tor_stopping_message">Tor 正在停止 …</string>
+    <string name="about_desc">关于 OnionDrop</string>
+    <string name="status_connected">TOR 已连接</string>
+    <string name="status_stopping">TOR 正在停止</string>
+    <string name="status_connecting">正在连接 TOR</string>
+    <string name="status_ready">随时可以开始</string>
+    <string name="hero_ready">你的 Drop 已准备好。</string>
+    <string name="hero_idle_title">你的 Drop。\n由你掌控。</string>
+    <string name="hero_idle_subtitle">直接发送和接收文件。\n无需账户。无需云端。</string>
+    <string name="auto_end">将在 %1$s 后自动结束</string>
+    <string name="stop_shares">停止共享</string>
+    <string name="send_files">发送文件</string>
+    <string name="send_subtitle">直接从你的手机发送。</string>
+    <string name="receive_files">接收文件</string>
+    <string name="receive_subtitle">你的私人收件箱。</string>
+    <string name="local_only">直接通过 Tor · 一切都保留在你的设备上</string>
+    <string name="send_eyebrow">发送</string>
+    <string name="send_title">你的文件。\n你的链接。</string>
+    <string name="send_intro">选择要共享的内容。只有这些文件可通过你的链接访问。</string>
+    <string name="send_question">你想共享什么？</string>
+    <string name="send_add_more">还要添加其他内容吗？</string>
+    <string name="file_limit">每个文件最多 250 MiB</string>
+    <string name="choose_files">选择文件</string>
+    <string name="start_share">开始共享</string>
+    <string name="selected_files">已选择 %1$d 个文件</string>
+    <string name="empty_selected_title">尚未选择任何文件。</string>
+    <string name="empty_selected_subtitle">在开始共享之前，你的文件会保持私密。</string>
+    <string name="receive_eyebrow">接收</string>
+    <string name="receive_title">你的私人收件箱。</string>
+    <string name="receive_intro">分享你的接收链接。其他人可以直接向你的手机发送文件。</string>
+    <string name="start_receive">开始接收</string>
+    <string name="received_files">已接收 %1$d 个文件</string>
+    <string name="empty_receive_title">你的下一个 Drop 会出现在这里。</string>
+    <string name="empty_receive_subtitle">接收的文件只保存在应用内部。</string>
+    <string name="link_ready">你的链接已准备好</string>
+    <string name="tor_progress">%1$d %% · 正在连接 Tor</string>
+    <string name="copy">复制</string>
+    <string name="share">分享</string>
+    <string name="stop_all">停止全部共享</string>
+    <string name="nav_overview">概览</string>
+    <string name="nav_send">发送</string>
+    <string name="nav_receive">接收</string>
+    <string name="cancel">取消</string>
+    <string name="close">关闭</string>
+    <string name="tor_starting">正在启动 Tor …</string>
+    <string name="stop">停止</string>
+    <string name="copied">已复制。</string>
+    <string name="private_link">你的私人链接</string>
+    <string name="about_message">版本 %1$s\n\nTor 和文件传输都在你的手机上运行。不需要服务器、Umbrel 或 Orbot。\n\n会话会在 30 分钟后结束。Android 或连接中断可能会提前结束会话。接收链接需要在 Tor Browser 中启用 JavaScript。\n\n每个文件 250 MiB · 每个区域最多 1 GiB 和 100 个文件。内容保存在应用的私有存储中，卸载应用时会被删除。</string>
+    <string name="understood">知道了</string>
+    <string name="channel_name">活动文件传输</string>
+    <string name="channel_desc">显示 OnionDrop 何时可通过 Tor 访问。</string>
+    <string name="tor_connecting_message">正在连接 Tor …</string>
+    <string name="phone_reachable">你的手机可通过 Tor 访问</string>
+    <string name="tor_stopping_message">Tor 正在停止 …</string>
+    <string name="brand_tagline">私密文件分享</string>
+    <string name="logo_desc">OnionDrop 标志</string>
+    <string name="local_copy_note">应用会创建本地副本。移除所选文件不会删除原文件。</string>
+    <string name="receive_browser_note">链接在 Tor Browser 中打开。访客无法查看已收到的文件。</string>
+    <string name="link_warning_send">任何拥有此链接的人都可以下载所选文件。请仅与预期的接收者分享。</string>
+    <string name="link_warning_receive">任何拥有此链接的人都可以向你的设备发送文件。请仅与预期的人分享。</string>
+    <string name="actions_for">%1$s 的操作</string>
+    <string name="please_stop_first">请先停止当前分享会话。</string>
+    <string name="import_title">将文件添加到 OnionDrop？</string>
+    <string name="import_message">将创建 %1$d 个文件的本地副本。之后由你手动开始分享。</string>
+    <string name="import_action">添加</string>
+    <string name="retry_select_file">请重新选择文件。</string>
+    <string name="storage_unavailable">存储位置不可用。</string>
+    <string name="file_saved">文件已保存。</string>
+    <string name="max_files_once">每次最多选择 20 个文件。</string>
+    <string name="file_picker_only">请使用 Android 文件选择器打开文件。</string>
+    <string name="default_file_name">文件</string>
+    <string name="file_unreadable">无法读取文件。</string>
+    <string name="import_partial">已导入 %1$d 个文件。</string>
+    <string name="files_added">已添加 %1$d 个文件。</string>
+    <string name="sha_show">显示 SHA-256</string>
+    <string name="remove_selection">移出所选列表</string>
+    <string name="save_to_device">保存到设备</string>
+    <string name="delete_file">删除文件</string>
+    <string name="remove_local_title">移除本地所选文件？</string>
+    <string name="delete_title">从 OnionDrop 删除文件？</string>
+    <string name="original_kept">原文件将保持不变。</string>
+    <string name="save_copy_warning">如需保留此文件，请先在应用外保存副本。</string>
+    <string name="remove">移除</string>
+    <string name="tor_still_stopping">Tor 正在停止，请稍候。</string>
+    <string name="notification_permission_note">会话会显示在 Android 的运行中应用列表中。你可以随时在 OnionDrop 中停止会话。</string>
+    <string name="stop_title">停止所有分享？</string>
+    <string name="stop_message">正在进行的传输将中断，两个链接都将失效。已保存的文件将保留。</string>
+    <string name="keep_running">继续运行</string>
+    <string name="share_chooser">分享 OnionDrop 私密链接</string>
+    <string name="about_title">OnionDrop</string>
+    <string name="action_failed">操作未完成</string>
+    <string name="retry">请重试。</string>
+    <string name="a11y_tor_connected">Tor 已连接</string>
+    <string name="a11y_tor_connecting">Tor 连接进度：百分之 %1$d</string>
+    <string name="session_expired">30 分钟会话已结束。</string>
+    <string name="session_stopped_saved">分享已停止。文件仍然保留。</string>
+    <string name="onion_publishing">正在发布 Onion 地址 …</string>
+    <string name="choose_first">请先选择文件。</string>
+    <string name="share_start_failed">无法开始分享。</string>
+    <string name="notification_title">OnionDrop · 私密分享</string>
+    <string name="background_ended">Android 已结束后台会话。</string>
+    <string name="share_ended">分享已停止。</string>
+    <string name="language">语言</string>
+    <string name="system_language">系统语言</string>
 </resources>

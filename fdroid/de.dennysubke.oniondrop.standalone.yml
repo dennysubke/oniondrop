@@ -2,7 +2,6 @@ Categories:
   - Internet
 License: GPL-3.0-or-later
 AuthorName: Denny Subke
-WebSite: https://github.com/dennysubke/oniondrop
 SourceCode: https://github.com/dennysubke/oniondrop
 IssueTracker: https://github.com/dennysubke/oniondrop/issues
 
@@ -18,10 +17,11 @@ Builds:
     sudo:
       - apt-get update
       - apt-get install -y autoconf automake libtool autopoint gettext pkg-config build-essential po4a libzstd-dev
-    prebuild:
-      - bash scripts/build-native-tor.sh arm64-v8a x86_64
+    build:
+      - ONIONDROP_OFFLINE=1 bash scripts/build-native-tor.sh arm64-v8a x86_64
+      - python3 scripts/collect-native-licenses.py third_party/tor-android app/src/main/assets/licenses/native
     gradle:
-      - yes
+      - 'yes'
     ndk: 28.2.13676358
 
 AutoUpdateMode: Version
