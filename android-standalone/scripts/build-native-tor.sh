@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+project_dir="$(cd "$(dirname "$0")/.." && pwd)"
+upstream_commit=cb04167d313cc3b5e1c1246111591aa57c2147cb
+: "${ANDROID_NDK_HOME:?Set ANDROID_NDK_HOME to Android NDK 28.2.13676358}"
+# A pinned source checkout supplies Tor 0.4.9.12 and all pinned cryptographic dependencies.
+# Do not downgrade to older prebuilt packages when this build cannot run.
+build_dir="${ONIONDROP_TOR_BUILD_DIR:-$project_dir/.native-tor}"
+if [ ! -d "$build_dir/.git" ]; then git clone https://github.com/guardianproject/tor-android.git "$build_dir"; fi
+if [ "$(git -C "$build_dir" rev-parse HEAD)" != "$upstream_commit" ]; then git -C "$build_dir" checkout --detach "$upstream_commit"; fi
+git -C "$build_dir" submodule update --init --recursive
+make -C "$build_dir/external" -f build-tools
+for abi in "${@:-arm64-v8a}"; do
+  case "$abi" in arm64-v8a|x86_64) ;; *) echo "Unsupported ABI: $abi" >&2; exit 1;; esac
+  APP_ABI="$abi" make -C "$build_dir/external" clean
+  APP_ABI="$abi" make -C "$build_dir/external"
+  mkdir -p "$project_dir/app/src/main/jniLibs/$abi"
+  cp "$build_dir/external/lib/$abi/libtor.so" "$project_dir/app/src/main/jniLibs/$abi/libtor.so"
+done
+printf '%s\n' "$upstream_commit" > "$project_dir/app/src/main/jniLibs/TOR_SOURCE_COMMIT"
