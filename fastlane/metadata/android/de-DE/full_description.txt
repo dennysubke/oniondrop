@@ -1,0 +1,7 @@
+OnionDrop ermöglicht das Senden und Empfangen von Dateien über temporäre Tor-Onion-Links direkt auf deinem Android-Gerät.
+
+Tor und der Übertragungsserver laufen auf dem Smartphone. Es wird weder ein Cloud-Konto noch ein externer OnionDrop-Server, Umbrel oder Orbot benötigt.
+
+Enthalten sind private Sende- und Empfangslinks, QR-Codes, SHA-256-Prüfsummen, lokaler Dateispeicher, Export über die Android-Dateiauswahl und automatisch endende 30-Minuten-Sitzungen.
+
+OnionDrop enthält keine Werbe- oder Analyse-SDKs. Der Quellcode steht unter GPL-3.0-or-later.
