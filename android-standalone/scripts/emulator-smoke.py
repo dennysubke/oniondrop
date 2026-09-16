@@ -25,7 +25,7 @@ def screenshot(name):
 
 def tap(label):
     for node in ET.fromstring(ui()).iter('node'):
-        if node.get('text', '').strip() == label or node.get('content-desc', '').strip() == label:
+        if node.get('text', '').strip().casefold() == label.casefold() or node.get('content-desc', '').strip().casefold() == label.casefold():
             x1, y1, x2, y2 = map(int, re.findall(r'\d+', node.attrib['bounds']))
             adb('shell', 'input', 'tap', str((x1+x2)//2), str((y1+y2)//2))
             time.sleep(1)
