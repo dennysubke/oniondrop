@@ -3,6 +3,8 @@ package de.dennysubke.oniondrop;
 import android.app.*;
 import android.content.*;
 import android.content.pm.ServiceInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.*;
 import de.dennysubke.oniondrop.core.*;
 import java.io.*;
@@ -40,7 +42,13 @@ public final class DropService extends Service {
             foreground("Tor wird verbunden …");
             if(server==null){
                 until=System.currentTimeMillis()+SESSION_MS;
-                byte[] logo;try(InputStream in=getResources().openRawResource(R.drawable.oniondrop_logo);ByteArrayOutputStream out=new ByteArrayOutputStream()){byte[] b=new byte[8192];int n;while((n=in.read(b))!=-1)out.write(b,0,n);logo=out.toByteArray();}
+                byte[] logo;
+                Bitmap logoBitmap=BitmapFactory.decodeResource(getResources(),R.drawable.oniondrop_logo);
+                if(logoBitmap==null)throw new IOException("OnionDrop-Logo konnte nicht geladen werden.");
+                try(ByteArrayOutputStream out=new ByteArrayOutputStream()){
+                    if(!logoBitmap.compress(Bitmap.CompressFormat.PNG,100,out))throw new IOException("OnionDrop-Logo konnte nicht vorbereitet werden.");
+                    logo=out.toByteArray();
+                } finally { logoBitmap.recycle(); }
                 server=new DropServer(((DropApp)getApplication()).store(),event->handler.post(()->{if(!stopping&&state.ready())publish("ready",state.host,event,100);}),logo);
                 server.start();
                 wake=((PowerManager)getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"OnionDrop:transfer");wake.acquire(SESSION_MS+15000);
