@@ -12,7 +12,7 @@ OnionDrop is a local-first Android app for sending and receiving files through a
 - SHA-256 checksums and local file management.
 - Foreground-service session with a 30-minute maximum lifetime and explicit stop controls.
 - Tor 0.4.9.12 built from pinned Guardian Project source.
-- Languages: German, English, Spanish, Italian, French, Chinese, Japanese and Russian. Android 13+ exposes these as per-app language choices; older Android versions follow the system language.
+- Languages: German, English, Spanish, Italian, French, Chinese, Japanese and Russian. Choose a language from About → Language, or follow the system language. Android 13+ also exposes the same setting in system app settings.
 
 ## Storage and limits
 
@@ -32,11 +32,13 @@ Requirements:
 - Git submodules initialized recursively
 
 ```bash
-git clone --recurse-submodules https://github.com/dennysubke/oniondrop.git
+git clone --branch codex/android-release-review --recurse-submodules https://github.com/dennysubke/oniondrop.git
 cd oniondrop/android-standalone
 export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/28.2.13676358"
 bash scripts/build-native-tor.sh arm64-v8a x86_64
+python3 scripts/collect-native-licenses.py third_party/tor-android app/src/main/assets/licenses/native
 bash tests/run.sh
+python3 tests/check-translations.py
 gradle --no-daemon :app:assembleRelease :app:lintRelease
 ```
 
