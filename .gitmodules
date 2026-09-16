@@ -1,0 +1,3 @@
+[submodule "android-standalone/third_party/tor-android"]
+    path = android-standalone/third_party/tor-android
+    url = https://github.com/guardianproject/tor-android.git
