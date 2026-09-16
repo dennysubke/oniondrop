@@ -1,9 +1,6 @@
 name: OnionDrop Android
 on:
   workflow_dispatch:
-  push:
-    branches: ['codex/android-standalone']
-    paths: ['android-standalone/**', '.github/workflows/android-standalone.yml']
   pull_request:
     paths: ['android-standalone/**', '.github/workflows/android-standalone.yml']
 permissions:
@@ -14,8 +11,6 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -33,7 +28,9 @@ jobs:
           sudo apt-get install -y autoconf automake libtool autopoint gettext pkg-config build-essential po4a libzstd-dev
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'ndk;28.2.13676358'
       - name: Core security and transfer tests
-        run: bash android-standalone/tests/run.sh
+        run: |
+          bash android-standalone/tests/run.sh
+          python3 android-standalone/tests/check-translations.py
       - uses: actions/cache/restore@v4
         id: tor-cache
         with:
@@ -41,6 +38,9 @@ jobs:
             android-standalone/app/src/main/jniLibs
             android-standalone/app/src/main/assets/licenses/native
           key: tor-android-cb04167d-ndk28.2-arm64-x86_64-licenses-v2
+      - name: Fetch pinned native sources
+        if: steps.tor-cache.outputs.cache-hit != 'true'
+        run: git submodule update --init --recursive
       - name: Build pinned Tor 0.4.9.12
         if: steps.tor-cache.outputs.cache-hit != 'true'
         run: |
@@ -56,30 +56,46 @@ jobs:
           key: tor-android-cb04167d-ndk28.2-arm64-x86_64-licenses-v2
       - name: Build and lint Android app
         working-directory: android-standalone
-        run: gradle --no-daemon :app:assembleDebug :app:assembleRelease :app:lintDebug :app:lintRelease
-      - name: Prepare installable test APK
-        run: cp android-standalone/app/build/outputs/apk/debug/app-debug.apk OnionDrop-1.0.0.apk
-      - name: Verify APK signature and native library alignment
         run: |
-          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose OnionDrop-1.0.0.apk
-          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 4 OnionDrop-1.0.0.apk
+          if ! gradle --no-daemon :app:assembleRelease :app:lintRelease; then
+            cat app/build/intermediates/lint_intermediate_text_report/release/lintReportRelease/lint-results-release.txt || true
+            exit 1
+          fi
+      - name: Package unsigned release and sign emulator copy
+        run: |
+          mkdir -p release-tools release
+          cp android-standalone/app/build/outputs/apk/release/app-release-unsigned.apk release/OnionDrop-1.0.0-unsigned.apk
+          cp "$ANDROID_HOME/build-tools/35.0.0/lib/apksigner.jar" release-tools/apksigner.jar
+          keytool -genkeypair -keystore "$RUNNER_TEMP/smoke.p12" -storepass smoke-test-only -keypass smoke-test-only -alias smoke -dname 'CN=OnionDrop CI test only' -keyalg RSA -keysize 2048 -validity 2
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" sign --ks "$RUNNER_TEMP/smoke.p12" --ks-pass pass:smoke-test-only --out OnionDrop-smoke.apk release/OnionDrop-1.0.0-unsigned.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose OnionDrop-smoke.apk
+          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 4 OnionDrop-smoke.apk
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging OnionDrop-smoke.apk > release/apk-manifest.txt
+          if grep -q application-debuggable release/apk-manifest.txt; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
-          name: OnionDrop-1.0.0
-          path: OnionDrop-1.0.0.apk
+          name: OnionDrop-release-build
+          path: |
+            release/
+            release-tools/
           if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OnionDrop-emulator-apk
+          path: OnionDrop-smoke.apk
+          retention-days: 3
   emulator:
     needs: build
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - uses: actions/download-artifact@v4
         with:
-          name: OnionDrop-1.0.0
+          name: OnionDrop-emulator-apk
           path: apk
+      - name: Install Tor transfer test peer
+        run: sudo apt-get update && sudo apt-get install -y tor curl
       - name: Enable emulator acceleration
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules

@@ -102,4 +102,6 @@
     <string name="tor_stopping_message">Tor is stopping …</string>
     <string name="background_ended">Android ended the background session.</string>
     <string name="share_ended">Sharing stopped.</string>
+    <string name="language">Language</string>
+    <string name="system_language">System language</string>
 </resources>

@@ -9,9 +9,10 @@ export ANDROID_NDK_HOME
 submodule_dir="$project_dir/third_party/tor-android"
 fallback_dir="${ONIONDROP_TOR_BUILD_DIR:-$project_dir/.native-tor}"
 
-if git -C "$submodule_dir" rev-parse --git-dir >/dev/null 2>&1; then
+if [ -e "$submodule_dir/.git" ]; then
   build_dir="$submodule_dir"
 else
+  if [ "${ONIONDROP_OFFLINE:-0}" = 1 ]; then echo "Initialize the pinned Tor submodules before the offline build." >&2; exit 1; fi
   build_dir="$fallback_dir"
   if ! git -C "$build_dir" rev-parse --git-dir >/dev/null 2>&1; then
     git clone https://github.com/guardianproject/tor-android.git "$build_dir"
@@ -23,7 +24,7 @@ if [ "$(git -C "$build_dir" rev-parse HEAD)" != "$upstream_commit" ]; then
 fi
 # In F-Droid/GitHub CI these are already fetched by recursive submodule checkout.
 # Locally this command initializes any missing nested source dependencies.
-git -C "$build_dir" submodule update --init --recursive
+if [ "${ONIONDROP_OFFLINE:-0}" != 1 ]; then git -C "$build_dir" submodule update --init --recursive; fi
 
 make -C "$build_dir/external" -f build-tools
 for abi in "${@:-arm64-v8a}"; do

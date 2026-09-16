@@ -102,4 +102,6 @@
     <string name="tor_stopping_message">Tor wird beendet …</string>
     <string name="background_ended">Android hat die Hintergrundsitzung beendet.</string>
     <string name="share_ended">Freigabe beendet.</string>
+    <string name="language">Sprache</string>
+    <string name="system_language">Systemsprache</string>
 </resources>

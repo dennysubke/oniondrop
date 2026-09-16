@@ -2,6 +2,8 @@ plugins { id 'com.android.application' }
 android {
     namespace 'de.dennysubke.oniondrop'
     compileSdk 35
+    buildFeatures { buildConfig true }
+    dependenciesInfo { includeInApk = false; includeInBundle = false }
     defaultConfig {
         applicationId 'de.dennysubke.oniondrop.standalone'
         minSdk 26
