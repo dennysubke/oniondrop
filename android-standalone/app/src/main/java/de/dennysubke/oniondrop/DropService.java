@@ -61,7 +61,7 @@ public final class DropService extends Service {
         }catch(Exception ex){finishSession(ex.getMessage()==null?"Die Freigabe konnte nicht gestartet werden.":ex.getMessage(),true);}
         return START_NOT_STICKY;
     }
-    private void publish(String phase,String host,String message,int progress){if(stopping)return;state=new State(phase,host,message,server.sendToken,server.receiveToken,progress,server.sending.get(),server.receiving.get(),until);getSystemService(NotificationManager.class).notify(NOTICE,notification(message));}
+    private void publish(String phase,String host,String message,int progress){if(stopping)return;state=new State(phase,host,message,server.sendToken,server.receiveToken,progress,server.sending.get(),server.receiving.get(),until);if(Build.VERSION.SDK_INT<33||checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)==android.content.pm.PackageManager.PERMISSION_GRANTED)getSystemService(NotificationManager.class).notify(NOTICE,notification(message));}
     private Notification notification(String text){
         PendingIntent open=PendingIntent.getActivity(this,0,new Intent(this,MainActivity.class),PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent stop=PendingIntent.getService(this,1,new Intent(this,DropService.class).setAction(STOP),PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);

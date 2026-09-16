@@ -29,14 +29,62 @@ jobs:
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0' 'ndk;28.2.13676358'
       - name: Core security and transfer tests
         run: bash android-standalone/tests/run.sh
+      - uses: actions/cache/restore@v4
+        id: tor-cache
+        with:
+          path: |
+            android-standalone/app/src/main/jniLibs
+            android-standalone/app/src/main/assets/licenses/native
+          key: tor-android-cb04167d-ndk28.2-arm64-x86_64-licenses-v1
       - name: Build pinned Tor 0.4.9.12
+        if: steps.tor-cache.outputs.cache-hit != 'true'
         run: |
           export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/28.2.13676358"
           bash android-standalone/scripts/build-native-tor.sh arm64-v8a x86_64
+          python3 android-standalone/scripts/collect-native-licenses.py android-standalone/.native-tor android-standalone/app/src/main/assets/licenses/native
+      - uses: actions/cache/save@v4
+        if: steps.tor-cache.outputs.cache-hit != 'true'
+        with:
+          path: |
+            android-standalone/app/src/main/jniLibs
+            android-standalone/app/src/main/assets/licenses/native
+          key: tor-android-cb04167d-ndk28.2-arm64-x86_64-licenses-v1
       - name: Build standalone app
         working-directory: android-standalone
         run: gradle --no-daemon :app:assembleDebug :app:lintDebug
+      - name: Verify APK signature and native library alignment
+        run: |
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose android-standalone/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 4 android-standalone/app/build/outputs/apk/debug/app-debug.apk
       - uses: actions/upload-artifact@v4
         with:
           name: OnionDrop-Standalone-0.2.0-alpha
           path: android-standalone/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+  emulator:
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: OnionDrop-Standalone-0.2.0-alpha
+          path: apk
+      - name: Enable emulator acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 35
+          arch: x86_64
+          profile: pixel_6
+          disable-animations: true
+          script: python3 android-standalone/scripts/emulator-smoke.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: OnionDrop-emulator-diagnostics
+          path: android-smoke
