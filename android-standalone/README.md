@@ -1,148 +1,59 @@
-# OnionDrop Standalone für Android · 0.2.0 Alpha
+# OnionDrop for Android · 1.0.0
 
-Eigenständige Android-App mit dem unveränderten Original-Logo von OnionDrop.
-Tor und Dateiübertragung laufen auf dem Handy. Kein Umbrel, eigener Server,
-Orbot oder Benutzerkonto ist erforderlich.
+OnionDrop is a local-first Android app for sending and receiving files through a temporary Tor v3 onion service. Tor and the transfer server run directly on the phone; no Umbrel server, Orbot account, cloud account, analytics service or advertising SDK is required.
 
-**Lieferstatus:** implementierter und gegen Android API 35 kompilierter Quellcode.
-43 lokale Kernprüfungen bestanden. **Keine APK im Paket.** Der vollständige
-Android-/NDK-Build und eine echte Tor-Übertragung auf einem Android-Gerät wurden
-noch nicht durchgeführt. Die Alpha ist deshalb noch keine einsatzgeprüfte App.
+## Features
 
-## Funktionen
+- Native Android interface with the original OnionDrop logo.
+- Send selected files through a private onion link.
+- Receive files through a separate private onion link without exposing an inbox listing.
+- Copy, share and display links as QR codes.
+- Export received files through Android's document picker.
+- SHA-256 checksums and local file management.
+- Foreground-service session with a 30-minute maximum lifetime and explicit stop controls.
+- Tor 0.4.9.12 built from pinned Guardian Project source.
+- Languages: German, English, Spanish, Italian, French, Chinese, Japanese and Russian. Android 13+ exposes these as per-app language choices; older Android versions follow the system language.
 
-- Native dunkle Oberfläche mit Original-Logo, Tor-Status und drei Bereichen:
-  Übersicht, Senden, Empfangen.
-- Dateien über Androids Dateiauswahl oder das Teilen-Menü übernehmen.
-- Ausgewählte Dateien über einen geheimen Onion-Link freigeben.
-- Separater geheimer Empfangslink: Besucher können Dateien abgeben, aber keine
-  zuvor empfangenen Dateien sehen oder herunterladen.
-- Links kopieren, teilen oder als lokal erzeugten QR-Code anzeigen.
-- Empfangene Dateien über den Android-Speicherdialog exportieren.
-- SHA-256-Prüfsummen, lokale Dateiverwaltung und Entfernen von Dateien.
-- Sichtbarer Vordergrunddienst mit Stopp-Aktion und 30-Minuten-Sitzungsdauer.
-- Neue Onion-Adresse und getrennte 256-Bit-Linkcodes pro Sitzung.
-- Originale bleiben beim Entfernen einer Sende-Auswahl erhalten.
+## Storage and limits
 
-Die Empfangsseite verwendet JavaScript und kann im Tor Browser geöffnet werden.
-Der Download einer bereitgestellten Datei benötigt kein JavaScript.
-Es gibt keine native Funktion zum Hochladen an beliebige fremde OnionShare-Links.
-Die App implementiert ihren eigenen Datei-Webdienst über Tor. OnionShare-
-Konfigurationsimport, private Tor-Client-Authentifizierung und vollständige
-Protokollkompatibilität mit OnionShares Verwaltung sind **nicht** implementiert.
+Files are kept in OnionDrop's private app storage. The current limits are 250 MiB per file and 1 GiB / 100 files per send or receive area. App-private files are removed when OnionDrop is uninstalled, so received files that should be kept permanently must be exported first.
 
-## Speicher und Laufzeit
+A sharing session lasts at most 30 minutes. Android background restrictions, power saving or network interruptions may end it sooner. Anyone who knows a complete send or receive link has the corresponding capability for the lifetime of that session; treat links as secrets.
 
-Die App speichert Dateien in ihrem privaten App-Verzeichnis. Bis zu 250 MiB pro
-Datei, insgesamt bis zu 1 GiB / 100 Dateien je Bereich. Beim Deinstallieren werden
-App-Dateien gelöscht; benötigte empfangene Dateien vorher exportieren.
+## Build from source
 
-Eine Freigabe läuft maximal 30 Minuten und kann jederzeit gestoppt werden.
-Androids Energiesparen, Netzabbrüche und Vordergrunddienstlimits können sie früher
-beenden. Abgebrochene Empfangsdateien werden nicht als vollständige Dateien
-angezeigt. Tor startet nicht automatisch beim Booten oder nach einem Prozessabbruch.
+Requirements:
 
-Jeder, der den vollständigen Link kennt, erhält die entsprechende Sende- oder
-Empfangsberechtigung. Der Link ist deshalb vertraulich. Die App nutzt keine
-Cloudspeicherung, Werbung oder Analyse-Dienste. Eine formale Sicherheitsprüfung
-ist noch nicht erfolgt.
-
-## APK lokal bauen (ohne GitHub-Konto)
-
-1. JDK 17 und Gradle 8.11.1 installieren.
-2. Android SDK mit `platforms;android-35`, `build-tools;35.0.0` und NDK
-   `28.2.13676358` installieren.
-3. Die unten genannten nativen Build-Werkzeuge installieren.
-4. Tor aus der festgelegten Quelle bauen, dann die App bauen.
-
-Unter Linux, oder unter Windows mit WSL2/Ubuntu:
+- JDK 17
+- Gradle 8.11.1 or a compatible Gradle version for Android Gradle Plugin 8.9.1
+- Android SDK 35, Build Tools 35.0.0
+- Android NDK 28.2.13676358
+- `autoconf automake libtool autopoint gettext pkg-config build-essential po4a libzstd-dev`
+- Git submodules initialized recursively
 
 ```bash
-sudo apt-get update
-sudo apt-get install -y autoconf automake libtool autopoint gettext \
-  pkg-config build-essential po4a libzstd-dev
-
-# Auf die eigene SDK-Installation anpassen:
-export ANDROID_HOME="$HOME/Android/Sdk"
+git clone --recurse-submodules https://github.com/dennysubke/oniondrop.git
+cd oniondrop/android-standalone
 export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/28.2.13676358"
-
-cd android-standalone
-bash scripts/build-native-tor.sh arm64-v8a
+bash scripts/build-native-tor.sh arm64-v8a x86_64
 bash tests/run.sh
-gradle --no-daemon :app:assembleDebug :app:lintDebug
+gradle --no-daemon :app:assembleRelease :app:lintRelease
 ```
 
-Für Emulatoren mit Intel/AMD zusätzlich `x86_64` an das Build-Skript übergeben.
-Der native Tor-Build benötigt eine Internetverbindung, ausreichend freien
-Speicher und mehr Zeit als der eigentliche App-Build. Das Skript verwendet die
-Build-Regeln des Guardian Project und ist hier noch nicht vollständig ausgeführt
-worden; eventuelle Build-Probleme müssen bei diesem ersten Durchlauf geprüft werden.
+The source build refuses to create an app without the native Tor engine.
 
-APK-Ausgabe:
-`android-standalone/app/build/outputs/apk/debug/app-debug.apk`
+## F-Droid
 
-Projektordner für Android Studio: `android-standalone/`. Es liegt kein Gradle-
-Wrapper bei; Gradle 8.11.1 verwenden oder mit installiertem Gradle
-`gradle wrapper --gradle-version 8.11.1` ausführen.
+The repository contains upstream Fastlane metadata and an F-Droid build-metadata template. F-Droid builds and signs its own APK from source; a developer/test APK is not the package submitted to the main F-Droid repository. See `FDROID.md` in the repository root.
 
-Unter Windows ist für den **nativen Tor-Build** WSL2/Linux vorgesehen; Git Bash
-allein genügt für die Linux-NDK-Build-Schritte nicht.
+## Tor source
 
-## Optionaler GitHub-Build
+Pinned Guardian Project tor-android commit:
 
-Der zusätzliche Workflow `.github/workflows/android-standalone.yml` baut zuerst
-Tor und danach die Debug-APK. Er kann in das bestehende OnionDrop-Repository
-übernommen werden und bietet unter Actions einen manuellen Start.
-Eine GitHub-Verbindung ist zur Nutzung des Quellcodes oder zum lokalen Bauen nicht
-notwendig. Es wurde nichts auf GitHub hochgeladen und kein Workflow gestartet.
-
-Das Ergebnis ist eine Test-APK. Für eine dauerhaft updatefähige Veröffentlichung
-ist ein eigener, sicher verwahrter Signierschlüssel erforderlich. Die
-Application-ID `de.dennysubke.oniondrop.standalone` ist von der früheren
-Server-Client-Preview getrennt.
-
-## Tor-Basis und Build-Grenze
-
-Tor-Version: **0.4.9.12**.
-Guardian-Project-Quellstand:
 `cb04167d313cc3b5e1c1246111591aa57c2147cb`
 
-Das Skript übernimmt die festgelegten Unterprojekte dieses Commits. Es verwendet
-absichtlich kein älteres vorgebautes Tor-Paket als automatischen Ersatz.
-Die native ausführbare `libtor.so` wird in die APK eingebettet und aus dem
-Android-Native-Library-Verzeichnis gestartet. Ein Build ohne Tor-Binärdatei wird
-abgebrochen, damit keine scheinbar eigenständige, aber unvollständige APK entsteht.
+The native `libtor.so` is built from that source and its pinned submodules for `arm64-v8a` and `x86_64`.
 
-Anwendungsseitige Tor-Steuerung: Cookie-Authentifizierung auf Loopback,
-`ADD_ONION` für eine nur während der Sitzung bestehende v3-Onion-Adresse und
-`HS_DESC UPLOADED` vor der Anzeige des fertigen Links.
+## License
 
-## Nachgewiesene Prüfungen
-
-- 43 lokale Prüfungen: Tokenprüfung, Sonderzeichen, HTML-Escaping, zufällige
-  Speicherpfade, Upload/Download, Download nur freigegebener Dateien,
-  Empfang ohne öffentliche Dateiliste, Größenlimits, unvollständige Uploads,
-  Herkunftsprüfung, doppelte Header, unbekannte Transferkodierungen,
-  Link-Deaktivierung, Dateipersistenz sowie Tor-Control-Antworten und Ereignisse.
-- Kompilierung sämtlicher App-Klassen gegen Android API 35, inklusive ZXing 3.5.3.
-  Dabei wurden Ressourcen-IDs als Compiler-Platzhalter bereitgestellt; dies ist
-  **kein** Android-Ressourcen- oder APK-Build.
-- XML-Syntax von Manifest und Ressourcen geprüft.
-- Das eingebundene Original-SVG ist bytegleich mit `oniondrop/static/logo.svg`.
-  Die Android-PNG wurde aus diesem SVG gerendert, nicht neu gezeichnet.
-
-Noch offen: NDK-/Gradle-/APK-Build, Android-Lint, echte Geräte- und
-Hintergrundtests, Tor-Start und Veröffentlichung, Ende-zu-Ende-Transfers über Tor,
-Android-Dateiauswahl, Teilen-Menü, Benachrichtigungen und QR-Scan auf dem Gerät.
-
-## Quellen und Lizenzen
-
-- OnionDrop und Original-Logo: https://github.com/dennysubke/oniondrop
-- Tor für Android: https://github.com/guardianproject/tor-android
-- Tor-Steuerprotokoll: https://spec.torproject.org/control-spec/
-- Android-Vordergrunddienste:
-  https://developer.android.com/develop/background-work/services/fgs/service-types
-- ZXing 3.5.3: https://github.com/zxing/zxing/tree/zxing-3.5.3
-
-OnionDrop: GPL-3.0-or-later, siehe LICENSE im Paket.
-Weitere Hinweise in THIRD-PARTY-NOTICES.md.
+OnionDrop is GPL-3.0-or-later. Third-party notices are in `THIRD-PARTY-NOTICES.md`.
