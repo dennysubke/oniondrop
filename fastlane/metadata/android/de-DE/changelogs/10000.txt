@@ -1,0 +1,1 @@
+Erste stabile Android-Version mit eingebettetem Tor, privaten Sende-/Empfangslinks, QR-Codes, lokaler Dateiverwaltung, korrigierter UI-Ausrichtung und acht Oberflächensprachen.
