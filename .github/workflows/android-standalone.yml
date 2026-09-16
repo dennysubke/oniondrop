@@ -1,4 +1,4 @@
-name: OnionDrop standalone APK
+name: OnionDrop Android
 on:
   workflow_dispatch:
   push:
@@ -14,6 +14,8 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -38,31 +40,33 @@ jobs:
           path: |
             android-standalone/app/src/main/jniLibs
             android-standalone/app/src/main/assets/licenses/native
-          key: tor-android-cb04167d-ndk28.2-arm64-x86_64-licenses-v1
+          key: tor-android-cb04167d-ndk28.2-arm64-x86_64-licenses-v2
       - name: Build pinned Tor 0.4.9.12
         if: steps.tor-cache.outputs.cache-hit != 'true'
         run: |
           export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/28.2.13676358"
           bash android-standalone/scripts/build-native-tor.sh arm64-v8a x86_64
-          python3 android-standalone/scripts/collect-native-licenses.py android-standalone/.native-tor android-standalone/app/src/main/assets/licenses/native
+          python3 android-standalone/scripts/collect-native-licenses.py android-standalone/third_party/tor-android android-standalone/app/src/main/assets/licenses/native
       - uses: actions/cache/save@v4
         if: steps.tor-cache.outputs.cache-hit != 'true'
         with:
           path: |
             android-standalone/app/src/main/jniLibs
             android-standalone/app/src/main/assets/licenses/native
-          key: tor-android-cb04167d-ndk28.2-arm64-x86_64-licenses-v1
-      - name: Build standalone app
+          key: tor-android-cb04167d-ndk28.2-arm64-x86_64-licenses-v2
+      - name: Build and lint Android app
         working-directory: android-standalone
-        run: gradle --no-daemon :app:assembleDebug :app:lintDebug
+        run: gradle --no-daemon :app:assembleDebug :app:assembleRelease :app:lintDebug :app:lintRelease
+      - name: Prepare installable test APK
+        run: cp android-standalone/app/build/outputs/apk/debug/app-debug.apk OnionDrop-1.0.0.apk
       - name: Verify APK signature and native library alignment
         run: |
-          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose android-standalone/app/build/outputs/apk/debug/app-debug.apk
-          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 4 android-standalone/app/build/outputs/apk/debug/app-debug.apk
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose OnionDrop-1.0.0.apk
+          "$ANDROID_HOME/build-tools/35.0.0/zipalign" -c -P 16 4 OnionDrop-1.0.0.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: OnionDrop-Standalone-0.2.0-alpha
-          path: android-standalone/app/build/outputs/apk/debug/app-debug.apk
+          name: OnionDrop-1.0.0
+          path: OnionDrop-1.0.0.apk
           if-no-files-found: error
   emulator:
     needs: build
@@ -70,9 +74,11 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
       - uses: actions/download-artifact@v4
         with:
-          name: OnionDrop-Standalone-0.2.0-alpha
+          name: OnionDrop-1.0.0
           path: apk
       - name: Enable emulator acceleration
         run: |
