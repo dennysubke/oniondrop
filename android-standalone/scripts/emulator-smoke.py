@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Exercise the installed APK and its real bundled Tor on a disposable emulator."""
+"""Exercise the installable APK and its real bundled Tor on a disposable emulator."""
 import pathlib
 import re
 import subprocess
@@ -30,22 +30,22 @@ def tap(label):
     raise RuntimeError('Visible action missing: ' + label)
 
 try:
-    adb('install', '-r', 'apk/app-debug.apk')
+    adb('install', '-r', 'apk/OnionDrop-1.0.0.apk')
     adb('shell', 'pm', 'grant', package, 'android.permission.POST_NOTIFICATIONS')
     adb('logcat', '-c')
     adb('shell', 'am', 'start', '-W', '-n', package + '/de.dennysubke.oniondrop.MainActivity')
     time.sleep(3)
     screenshot('01-home')
-    tap('Dateien empfangen')
+    tap('Receive files')
     screenshot('02-receive')
-    tap('Empfang starten')
+    tap('Start receiving')
     deadline = time.monotonic() + 260
     while time.monotonic() < deadline:
         xml = ui()
         (out / 'last-window.xml').write_text(xml)
         if re.search(r'http://[a-z2-7]{56}\.onion/r/', xml):
             screenshot('03-onion-ready')
-            print('PASS: installed APK launched and its bundled Tor published a real onion receive link.')
+            print('PASS: APK launched and bundled Tor published a real onion receive link.')
             break
         time.sleep(5)
     else:
