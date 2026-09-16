@@ -1,6 +1,9 @@
 name: OnionDrop standalone APK
 on:
   workflow_dispatch:
+  push:
+    branches: ['codex/android-standalone']
+    paths: ['android-standalone/**', '.github/workflows/android-standalone.yml']
   pull_request:
     paths: ['android-standalone/**', '.github/workflows/android-standalone.yml']
 permissions:
