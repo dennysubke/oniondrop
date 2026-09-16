@@ -25,65 +25,58 @@ public final class DropService extends Service {
         public String sendUrl(){return ready()&&sending?"http://"+host+"/s/"+sendToken+"/":"";}
         public String receiveUrl(){return ready()&&receiving?"http://"+host+"/r/"+receiveToken+"/":"";}
     }
-    private static volatile State state=new State("idle","","Bereit für deinen ersten Drop","","",0,false,false,0);
+    private static volatile State state=new State("idle","","","","",0,false,false,0);
     public static State state(){return state;}
     private final Handler handler=new Handler(Looper.getMainLooper());
     private final ExecutorService engine=Executors.newSingleThreadExecutor();
     private DropServer server;private TorRunner tor;private PowerManager.WakeLock wake;
     private boolean stopping;private long until;
-    private final Runnable expire=()->finishSession("Die 30-Minuten-Sitzung ist abgelaufen.",false);
-    @Override public void onCreate(){super.onCreate();NotificationChannel c=new NotificationChannel(CHANNEL,"Aktive Dateiübertragung",NotificationManager.IMPORTANCE_LOW);c.setDescription("Zeigt, wann OnionDrop über Tor erreichbar ist.");getSystemService(NotificationManager.class).createNotificationChannel(c);}
+    private final Runnable expire=()->finishSession(getString(R.string.session_expired),false);
+    @Override public void onCreate(){super.onCreate();NotificationChannel c=new NotificationChannel(CHANNEL,getString(R.string.channel_name),NotificationManager.IMPORTANCE_LOW);c.setDescription(getString(R.string.channel_desc));getSystemService(NotificationManager.class).createNotificationChannel(c);}
     @Override public int onStartCommand(Intent intent,int flags,int startId){
         if(intent==null){stopSelf();return START_NOT_STICKY;}
-        if(STOP.equals(intent.getAction())){finishSession("Freigabe beendet. Deine Dateien bleiben gespeichert.",false);return START_NOT_STICKY;}
+        if(STOP.equals(intent.getAction())){finishSession(getString(R.string.session_stopped_saved),false);return START_NOT_STICKY;}
         if(stopping)return START_NOT_STICKY;
         String action=intent.getAction();if(!START_SEND.equals(action)&&!START_RECEIVE.equals(action)){stopSelf();return START_NOT_STICKY;}
         try{
-            foreground("Tor wird verbunden …");
+            foreground(getString(R.string.tor_connecting_message));
             if(server==null){
                 until=System.currentTimeMillis()+SESSION_MS;
-                byte[] logo;
-                Bitmap logoBitmap=BitmapFactory.decodeResource(getResources(),R.drawable.oniondrop_logo);
-                if(logoBitmap==null)throw new IOException("OnionDrop-Logo konnte nicht geladen werden.");
-                try(ByteArrayOutputStream out=new ByteArrayOutputStream()){
-                    if(!logoBitmap.compress(Bitmap.CompressFormat.PNG,100,out))throw new IOException("OnionDrop-Logo konnte nicht vorbereitet werden.");
-                    logo=out.toByteArray();
-                } finally { logoBitmap.recycle(); }
+                byte[] logo;try(ByteArrayOutputStream out=new ByteArrayOutputStream()){Bitmap bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.oniondrop_logo);if(bitmap==null)throw new IOException("OnionDrop logo missing.");bitmap.compress(Bitmap.CompressFormat.PNG,100,out);logo=out.toByteArray();}
                 server=new DropServer(((DropApp)getApplication()).store(),event->handler.post(()->{if(!stopping&&state.ready())publish("ready",state.host,event,100);}),logo);
                 server.start();
                 wake=((PowerManager)getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"OnionDrop:transfer");wake.acquire(SESSION_MS+15000);
                 handler.postDelayed(expire,SESSION_MS);
                 tor=new TorRunner(new TorRunner.Listener(){
-                    @Override public void progress(int percent){handler.post(()->{if(!stopping&&(!state.ready()||percent<100))publish("starting","",percent==100?"Onion-Adresse wird veröffentlicht …":"Tor wird verbunden …",percent);});}
-                    @Override public void published(String host){handler.post(()->{if(!stopping){server.setOnion(host);publish("ready",host,"Dein Handy ist über Tor erreichbar",100);}});}
+                    @Override public void progress(int percent){handler.post(()->{if(!stopping&&(!state.ready()||percent<100))publish("starting","",percent==100?getString(R.string.onion_publishing):getString(R.string.tor_connecting_message),percent);});}
+                    @Override public void published(String host){handler.post(()->{if(!stopping){server.setOnion(host);publish("ready",host,getString(R.string.phone_reachable),100);}});}
                     @Override public void failed(String message){handler.post(()->finishSession(message,true));}
                 });
                 final TorRunner runner=tor;final int port=server.port();
                 engine.execute(()->runner.run(new File(getApplicationInfo().nativeLibraryDir,"libtor.so"),new File(getFilesDir(),"tor"),android.os.Process.myPid(),port));
             }
             if(START_SEND.equals(action)){
-                if(((DropApp)getApplication()).store().shared().isEmpty())throw new IOException("Bitte zuerst Dateien auswählen.");server.sending.set(true);
+                if(((DropApp)getApplication()).store().shared().isEmpty())throw new IOException(getString(R.string.choose_first));server.sending.set(true);
             }
             if(START_RECEIVE.equals(action))server.receiving.set(true);
-            publish(state.ready()?"ready":"starting",state.ready()?state.host:"",state.ready()?"Dein Handy ist über Tor erreichbar":"Tor wird verbunden …",state.ready()?100:state.progress);
-        }catch(Exception ex){finishSession(ex.getMessage()==null?"Die Freigabe konnte nicht gestartet werden.":ex.getMessage(),true);}
+            publish(state.ready()?"ready":"starting",state.ready()?state.host:"",state.ready()?getString(R.string.phone_reachable):getString(R.string.tor_connecting_message),state.ready()?100:state.progress);
+        }catch(Exception ex){finishSession(ex.getMessage()==null?getString(R.string.share_start_failed):ex.getMessage(),true);}
         return START_NOT_STICKY;
     }
-    private void publish(String phase,String host,String message,int progress){if(stopping)return;state=new State(phase,host,message,server.sendToken,server.receiveToken,progress,server.sending.get(),server.receiving.get(),until);if(Build.VERSION.SDK_INT<33||checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)==android.content.pm.PackageManager.PERMISSION_GRANTED)getSystemService(NotificationManager.class).notify(NOTICE,notification(message));}
+    private void publish(String phase,String host,String message,int progress){if(stopping)return;state=new State(phase,host,message,server.sendToken,server.receiveToken,progress,server.sending.get(),server.receiving.get(),until);getSystemService(NotificationManager.class).notify(NOTICE,notification(message));}
     private Notification notification(String text){
         PendingIntent open=PendingIntent.getActivity(this,0,new Intent(this,MainActivity.class),PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent stop=PendingIntent.getService(this,1,new Intent(this,DropService.class).setAction(STOP),PendingIntent.FLAG_IMMUTABLE|PendingIntent.FLAG_UPDATE_CURRENT);
-        return new Notification.Builder(this,CHANNEL).setSmallIcon(R.drawable.ic_notification).setContentTitle("OnionDrop · private Freigabe").setContentText(text).setContentIntent(open).setOngoing(true).setCategory(Notification.CATEGORY_SERVICE).setOnlyAlertOnce(true).addAction(new Notification.Action.Builder(null,"Beenden",stop).build()).build();
+        return new Notification.Builder(this,CHANNEL).setSmallIcon(R.drawable.ic_notification).setContentTitle(getString(R.string.notification_title)).setContentText(text).setContentIntent(open).setOngoing(true).setCategory(Notification.CATEGORY_SERVICE).setOnlyAlertOnce(true).addAction(new Notification.Action.Builder(null,getString(R.string.stop),stop).build()).build();
     }
     private void foreground(String text){if(Build.VERSION.SDK_INT>=29)startForeground(NOTICE,notification(text),ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);else startForeground(NOTICE,notification(text));}
     private void finishSession(String message,boolean error){
-        if(stopping)return;stopping=true;state=new State("stopping","","Tor wird beendet …","","",0,false,false,0);handler.removeCallbacks(expire);
+        if(stopping)return;stopping=true;state=new State("stopping","",getString(R.string.tor_stopping_message),"","",0,false,false,0);handler.removeCallbacks(expire);
         if(server!=null)server.close();
-        // Tor shutdown can take two seconds; keep it off the main/UI thread.
         final TorRunner runner=tor;new Thread(()->{if(runner!=null)runner.close();state=new State(error?"error":"idle","",message,"","",0,false,false,0);},"oniondrop-stop").start();
         if(wake!=null&&wake.isHeld())wake.release();stopForeground(STOP_FOREGROUND_REMOVE);stopSelf();
     }
-    @Override public void onTimeout(int startId,int fgsType){finishSession("Android hat die Hintergrundsitzung beendet.",false);}
-    @Override public void onDestroy(){finishSession("Freigabe beendet.",false);handler.removeCallbacksAndMessages(null);engine.shutdown();super.onDestroy();}
+    @Override public void onTimeout(int startId,int fgsType){finishSession(getString(R.string.background_ended),false);}
+    @Override public void onDestroy(){finishSession(getString(R.string.share_ended),false);handler.removeCallbacksAndMessages(null);engine.shutdown();super.onDestroy();}
     @Override public IBinder onBind(Intent intent){return null;}
 }
