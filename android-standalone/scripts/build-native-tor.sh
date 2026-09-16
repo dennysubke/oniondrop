@@ -2,7 +2,9 @@
 set -euo pipefail
 project_dir="$(cd "$(dirname "$0")/.." && pwd)"
 upstream_commit=cb04167d313cc3b5e1c1246111591aa57c2147cb
-: "${ANDROID_NDK_HOME:?Set ANDROID_NDK_HOME to Android NDK 28.2.13676358}"
+ANDROID_NDK_HOME="${ANDROID_NDK_HOME:-${ANDROID_NDK_ROOT:-${ANDROID_NDK:-}}}"
+: "${ANDROID_NDK_HOME:?Set ANDROID_NDK_HOME, ANDROID_NDK_ROOT or ANDROID_NDK to Android NDK 28.2.13676358}"
+export ANDROID_NDK_HOME
 
 submodule_dir="$project_dir/third_party/tor-android"
 fallback_dir="${ONIONDROP_TOR_BUILD_DIR:-$project_dir/.native-tor}"
