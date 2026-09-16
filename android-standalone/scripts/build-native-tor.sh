@@ -3,12 +3,26 @@ set -euo pipefail
 project_dir="$(cd "$(dirname "$0")/.." && pwd)"
 upstream_commit=cb04167d313cc3b5e1c1246111591aa57c2147cb
 : "${ANDROID_NDK_HOME:?Set ANDROID_NDK_HOME to Android NDK 28.2.13676358}"
-# A pinned source checkout supplies Tor 0.4.9.12 and all pinned cryptographic dependencies.
-# Do not downgrade to older prebuilt packages when this build cannot run.
-build_dir="${ONIONDROP_TOR_BUILD_DIR:-$project_dir/.native-tor}"
-if [ ! -d "$build_dir/.git" ]; then git clone https://github.com/guardianproject/tor-android.git "$build_dir"; fi
-if [ "$(git -C "$build_dir" rev-parse HEAD)" != "$upstream_commit" ]; then git -C "$build_dir" checkout --detach "$upstream_commit"; fi
+
+submodule_dir="$project_dir/third_party/tor-android"
+fallback_dir="${ONIONDROP_TOR_BUILD_DIR:-$project_dir/.native-tor}"
+
+if git -C "$submodule_dir" rev-parse --git-dir >/dev/null 2>&1; then
+  build_dir="$submodule_dir"
+else
+  build_dir="$fallback_dir"
+  if ! git -C "$build_dir" rev-parse --git-dir >/dev/null 2>&1; then
+    git clone https://github.com/guardianproject/tor-android.git "$build_dir"
+  fi
+fi
+
+if [ "$(git -C "$build_dir" rev-parse HEAD)" != "$upstream_commit" ]; then
+  git -C "$build_dir" checkout --detach "$upstream_commit"
+fi
+# In F-Droid/GitHub CI these are already fetched by recursive submodule checkout.
+# Locally this command initializes any missing nested source dependencies.
 git -C "$build_dir" submodule update --init --recursive
+
 make -C "$build_dir/external" -f build-tools
 for abi in "${@:-arm64-v8a}"; do
   case "$abi" in arm64-v8a|x86_64) ;; *) echo "Unsupported ABI: $abi" >&2; exit 1;; esac
