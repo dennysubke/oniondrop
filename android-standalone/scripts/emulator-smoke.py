@@ -57,13 +57,16 @@ def expect_text(label):
         time.sleep(1)
     raise AssertionError('Expected visible text: ' + label)
 
-def pick_fixture(name):
+def prepare_fixture(name):
     path = out / name
     path.write_text('OnionDrop file-counter regression fixture\n')
     adb('push', str(path), '/sdcard/Download/' + name)
+
+def pick_fixture(name):
     tap('Choose files')
     tap('Show roots')
     tap('Downloads')
+    expect_text(name)
     tap(name)
 
 def nav_check(tag):
@@ -112,6 +115,10 @@ try:
     locale('en')
     tap('Send')
     expect_text('0 FILES SELECTED')
+    # Populate both files before DocumentsUI first queries the directory;
+    # pushing another file later can leave its cached listing out of date.
+    prepare_fixture('counter-one.txt')
+    prepare_fixture('counter-two.txt')
     pick_fixture('counter-one.txt')
     expect_text('1 FILE SELECTED')
     screenshot('counter-selected-one-en')
@@ -192,6 +199,7 @@ try:
 finally:
     if peer:
         peer.terminate()
+    (out / 'last-window.xml').write_text(ui())
     screenshot('last-screen')
     (out / 'logcat.txt').write_bytes(adb('logcat', '-d', '-t', '2000'))
     adb('shell', 'am', 'force-stop', package)
