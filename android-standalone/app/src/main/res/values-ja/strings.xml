@@ -23,14 +23,18 @@
     <string name="file_limit">1ファイルあたり最大250 MiB</string>
     <string name="choose_files">ファイルを選択</string>
     <string name="start_share">共有を開始</string>
-    <string name="selected_files">%1$d 個のファイルを選択</string>
+    <plurals name="selected_files">
+        <item quantity="other">%1$d 個のファイルを選択</item>
+    </plurals>
     <string name="empty_selected_title">まだ何も選択されていません。</string>
     <string name="empty_selected_subtitle">共有を開始するまでファイルは非公開です。</string>
     <string name="receive_eyebrow">受信</string>
     <string name="receive_title">あなた専用の受信箱。</string>
     <string name="receive_intro">受信用リンクを共有すると、相手はあなたのスマートフォンへ直接ファイルを送信できます。</string>
     <string name="start_receive">受信を開始</string>
-    <string name="received_files">%1$d 個のファイルを受信</string>
+    <plurals name="received_files">
+        <item quantity="other">%1$d 個のファイルを受信</item>
+    </plurals>
     <string name="empty_receive_title">次の Drop はここに届きます。</string>
     <string name="empty_receive_subtitle">受信したファイルはアプリ内にのみ保存されます。</string>
     <string name="link_ready">リンクの準備ができました</string>

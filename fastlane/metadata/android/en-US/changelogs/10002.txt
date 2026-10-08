@@ -1,0 +1,1 @@
+Correct singular and plural file counters in all eight languages. F-Droid builds are pinned to a full source commit hash.

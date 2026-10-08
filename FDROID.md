@@ -1,6 +1,6 @@
 # F-Droid submission
 
-OnionDrop 1.0.1 (`10001`) uses application ID `de.dennysubke.oniondrop.standalone` and is licensed GPL-3.0-or-later.
+OnionDrop 1.0.2 (`10002`) uses application ID `de.dennysubke.oniondrop.standalone` and is licensed GPL-3.0-or-later.
 
 ## Source build
 
@@ -10,11 +10,11 @@ Use JDK 17, Gradle 8.11.1, Android SDK / Build Tools 35 and NDK 28.2.13676358. S
 
 ## Submission files
 
-Copy `fdroid/de.dennysubke.oniondrop.standalone.yml` to the `metadata/` directory of a current fdroiddata checkout. It builds the `v1.0.1` release tag, including the Gradle wrapper configuration. Automatic updates track stable `vX.Y.Z` tags. Every new tag must contain its matching Android version name and code, the wrapper configuration and the Fastlane changelog.
+Copy `fdroid/de.dennysubke.oniondrop.standalone.yml` to the `metadata/` directory of a current fdroiddata checkout. The recipe pins a full 40-character source commit hash, including the Gradle wrapper configuration. Do not put a tag or branch in the `commit` field. The release tag remains available for users and automatic update discovery. Automatic updates track stable `vX.Y.Z` tags. Every new tag must contain its matching Android version name and code, the wrapper configuration and the Fastlane changelog.
 
 Store text and the original icon are in `fastlane/metadata/android/{de-DE,en-US}/`. The submission bundle also provides these files in fdroiddata's per-application metadata layout, with emulator screenshots and validation records.
 
-Run `fdroid lint de.dennysubke.oniondrop.standalone` and `fdroid build --verbose de.dennysubke.oniondrop.standalone:10001` in the F-Droid build environment. Open a merge request against fdroiddata with the metadata and store assets. Respond to the maintainers' review and build results. The initial 1.0.0 recipe passed the F-Droid merge-request pipeline. Inclusion is still under review in [MR !49140](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/49140). The 1.0.1 recipe must pass a new pipeline before approval.
+Run `fdroid lint de.dennysubke.oniondrop.standalone` and `fdroid build --verbose de.dennysubke.oniondrop.standalone:10002` in the F-Droid build environment. Open a merge request against fdroiddata with the metadata and store assets. Respond to the maintainers' review and build results. The 1.0.0 and 1.0.1 recipes passed the F-Droid merge-request pipeline. Inclusion is still under review in [MR !49140](https://gitlab.com/fdroid/fdroiddata/-/merge_requests/49140). The 1.0.2 recipe must pass a new pipeline before approval.
 
 ## Signing and installation
 

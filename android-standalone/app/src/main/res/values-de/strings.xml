@@ -25,7 +25,10 @@
     <string name="file_limit">Bis zu 250 MiB je Datei</string>
     <string name="choose_files">Dateien auswählen</string>
     <string name="start_share">Freigabe starten</string>
-    <string name="selected_files">%1$d DATEIEN AUSGEWÄHLT</string>
+    <plurals name="selected_files">
+        <item quantity="one">%1$d DATEI AUSGEWÄHLT</item>
+        <item quantity="other">%1$d DATEIEN AUSGEWÄHLT</item>
+    </plurals>
     <string name="empty_selected_title">Noch nichts ausgewählt.</string>
     <string name="empty_selected_subtitle">Deine Dateien bleiben privat, bis du die Freigabe startest.</string>
     <string name="local_copy_note">Die App erstellt eine lokale Kopie. Du kannst die Auswahl entfernen, ohne das Original zu löschen.</string>
@@ -34,7 +37,10 @@
     <string name="receive_intro">Teile deinen Empfangslink. Andere können Dateien direkt auf deinem Handy ablegen.</string>
     <string name="start_receive">Empfang starten</string>
     <string name="receive_browser_note">Dein Link öffnet sich im Tor Browser. Besuchern werden keine empfangenen Dateien angezeigt.</string>
-    <string name="received_files">%1$d DATEIEN EMPFANGEN</string>
+    <plurals name="received_files">
+        <item quantity="one">%1$d DATEI EMPFANGEN</item>
+        <item quantity="other">%1$d DATEIEN EMPFANGEN</item>
+    </plurals>
     <string name="empty_receive_title">Hier kommt dein nächster Drop an.</string>
     <string name="empty_receive_subtitle">Empfangene Dateien werden ausschließlich in der App gespeichert.</string>
     <string name="link_ready">Dein Link ist bereit</string>

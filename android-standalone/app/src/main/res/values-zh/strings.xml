@@ -23,14 +23,18 @@
     <string name="file_limit">每个文件最多 250 MiB</string>
     <string name="choose_files">选择文件</string>
     <string name="start_share">开始共享</string>
-    <string name="selected_files">已选择 %1$d 个文件</string>
+    <plurals name="selected_files">
+        <item quantity="other">已选择 %1$d 个文件</item>
+    </plurals>
     <string name="empty_selected_title">尚未选择任何文件。</string>
     <string name="empty_selected_subtitle">在开始共享之前，你的文件会保持私密。</string>
     <string name="receive_eyebrow">接收</string>
     <string name="receive_title">你的私人收件箱。</string>
     <string name="receive_intro">分享你的接收链接。其他人可以直接向你的手机发送文件。</string>
     <string name="start_receive">开始接收</string>
-    <string name="received_files">已接收 %1$d 个文件</string>
+    <plurals name="received_files">
+        <item quantity="other">已接收 %1$d 个文件</item>
+    </plurals>
     <string name="empty_receive_title">你的下一个 Drop 会出现在这里。</string>
     <string name="empty_receive_subtitle">接收的文件只保存在应用内部。</string>
     <string name="link_ready">你的链接已准备好</string>

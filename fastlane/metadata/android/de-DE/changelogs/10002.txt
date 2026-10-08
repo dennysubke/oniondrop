@@ -1,0 +1,1 @@
+Einzahl und Mehrzahl der Dateizähler in allen acht Sprachen korrigiert. F-Droid-Builds sind an einen vollständigen Quellcode-Commit gebunden.

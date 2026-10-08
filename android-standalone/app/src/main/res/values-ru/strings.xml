@@ -23,14 +23,24 @@
     <string name="file_limit">До 250 MiB на файл</string>
     <string name="choose_files">Выбрать файлы</string>
     <string name="start_share">Начать доступ</string>
-    <string name="selected_files">ВЫБРАНО ФАЙЛОВ: %1$d</string>
+    <plurals name="selected_files">
+        <item quantity="one">ВЫБРАН %1$d ФАЙЛ</item>
+        <item quantity="few">ВЫБРАНО %1$d ФАЙЛА</item>
+        <item quantity="many">ВЫБРАНО %1$d ФАЙЛОВ</item>
+        <item quantity="other">ВЫБРАНО %1$d ФАЙЛА</item>
+    </plurals>
     <string name="empty_selected_title">Пока ничего не выбрано.</string>
     <string name="empty_selected_subtitle">Файлы останутся приватными до запуска доступа.</string>
     <string name="receive_eyebrow">ПОЛУЧЕНИЕ</string>
     <string name="receive_title">Ваш приватный вход.</string>
     <string name="receive_intro">Поделитесь ссылкой для приёма. Другие смогут отправлять файлы прямо на ваш телефон.</string>
     <string name="start_receive">Начать приём</string>
-    <string name="received_files">ПОЛУЧЕНО ФАЙЛОВ: %1$d</string>
+    <plurals name="received_files">
+        <item quantity="one">ПОЛУЧЕН %1$d ФАЙЛ</item>
+        <item quantity="few">ПОЛУЧЕНО %1$d ФАЙЛА</item>
+        <item quantity="many">ПОЛУЧЕНО %1$d ФАЙЛОВ</item>
+        <item quantity="other">ПОЛУЧЕНО %1$d ФАЙЛА</item>
+    </plurals>
     <string name="empty_receive_title">Следующий Drop появится здесь.</string>
     <string name="empty_receive_subtitle">Полученные файлы хранятся только внутри приложения.</string>
     <string name="link_ready">Ссылка готова</string>
