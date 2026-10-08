@@ -104,4 +104,45 @@
     <string name="share_ended">共有を停止しました。</string>
     <string name="language">言語</string>
     <string name="system_language">システムの言語</string>
+
+    <!-- Text served to visitors of private Tor links. -->
+    <string name="web_language">ja</string>
+    <string name="web_send_title">ファイルが届いています。</string>
+    <string name="web_send_description">これらのファイルがあなたに共有されています。</string>
+    <string name="web_save_file">ファイルを保存</string>
+    <string name="web_bytes">バイト</string>
+    <string name="web_receive_title">プライベートに送信。</string>
+    <string name="web_receive_description">ファイルを選択してください。受信者の端末に直接保存されます。1 ファイルにつき最大 250 MiB です。</string>
+    <string name="web_choose_files">ファイルを選択</string>
+    <string name="web_send_files">ファイルを送信</string>
+    <string name="web_javascript_required">ファイルをアップロードするには、Tor Browser で JavaScript を有効にしてください。</string>
+    <string name="web_footer">端末から直接、Tor 経由で。リンクは共有中のみ有効です。</string>
+    <string name="web_select_files">ファイルを選択してください。</string>
+    <string name="web_too_large">ファイルが大きすぎます：</string>
+    <string name="web_sending">送信中：</string>
+    <string name="web_transfer_failed">転送に失敗しました：</string>
+    <string name="web_files_sent">転送済みファイル数：</string>
+    <string name="web_network_failed">ネットワークエラーです。接続を確認して再試行してください。</string>
+    <string name="web_invalid_host">ホストが無効です。</string>
+    <string name="web_method_not_allowed">このメソッドは許可されていません。</string>
+    <string name="web_not_found">見つかりません。</string>
+    <string name="web_redirect">リダイレクト中です。</string>
+    <string name="web_file_not_found">ファイルが見つかりません。</string>
+    <string name="web_origin_not_allowed">このオリジンは許可されていません。</string>
+    <string name="web_upload_header_required">アップロード用のヘッダーが必要です。</string>
+    <string name="web_length_required">Content-Length が必要です。</string>
+    <string name="web_max_file_size">1 ファイルにつき最大 250 MiB です。</string>
+    <string name="web_name_required">ファイル名が必要です。</string>
+    <string name="web_save_failed">ファイルを完全に保存できませんでした。空き容量と接続を確認してください。</string>
+    <string name="web_headers_too_large">ヘッダーが大きすぎます。</string>
+    <string name="web_invalid_request">リクエストが無効です。</string>
+    <string name="web_invalid_header">ヘッダーが無効です。</string>
+    <string name="web_duplicate_header">ヘッダーが重複しているか無効です。</string>
+    <string name="web_chunked_unsupported">chunked エンコーディングのアップロードには対応していません。</string>
+    <string name="web_expect_unsupported">Expect には対応していません。</string>
+    <string name="web_invalid_length">長さが無効です。</string>
+    <string name="web_invalid_path">パスが無効です。</string>
+    <string name="web_connection_interrupted">接続が中断されました</string>
+    <string name="web_file_downloaded">ファイルがダウンロードされました</string>
+    <string name="web_file_received">ファイルを受信しました</string>
 </resources>

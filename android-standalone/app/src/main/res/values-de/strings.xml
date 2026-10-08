@@ -104,4 +104,45 @@
     <string name="share_ended">Freigabe beendet.</string>
     <string name="language">Sprache</string>
     <string name="system_language">Systemsprache</string>
+
+    <!-- Text served to visitors of private Tor links. -->
+    <string name="web_language">de</string>
+    <string name="web_send_title">Ein Drop für dich.</string>
+    <string name="web_send_description">Diese Dateien wurden für dich freigegeben.</string>
+    <string name="web_save_file">Datei speichern</string>
+    <string name="web_bytes">Bytes</string>
+    <string name="web_receive_title">Privat abgeben.</string>
+    <string name="web_receive_description">Wähle Dateien aus. Sie werden direkt auf dem Gerät des Empfängers gespeichert. Maximal 250 MiB je Datei.</string>
+    <string name="web_choose_files">Dateien auswählen</string>
+    <string name="web_send_files">Dateien senden</string>
+    <string name="web_javascript_required">Für den Upload muss JavaScript im Tor Browser aktiviert sein.</string>
+    <string name="web_footer">Direkt vom Gerät. Über Tor. Der Link gilt nur während der aktiven Freigabe.</string>
+    <string name="web_select_files">Bitte Dateien auswählen.</string>
+    <string name="web_too_large">Datei zu groß:</string>
+    <string name="web_sending">Wird gesendet:</string>
+    <string name="web_transfer_failed">Übertragung fehlgeschlagen:</string>
+    <string name="web_files_sent">Übermittelte Dateien:</string>
+    <string name="web_network_failed">Netzwerkfehler. Prüfe die Verbindung und versuche es erneut.</string>
+    <string name="web_invalid_host">Ungültiger Host.</string>
+    <string name="web_method_not_allowed">Methode nicht erlaubt.</string>
+    <string name="web_not_found">Nicht gefunden.</string>
+    <string name="web_redirect">Weiterleitung.</string>
+    <string name="web_file_not_found">Datei nicht gefunden.</string>
+    <string name="web_origin_not_allowed">Ursprung nicht erlaubt.</string>
+    <string name="web_upload_header_required">Upload-Header fehlt.</string>
+    <string name="web_length_required">Content-Length erforderlich.</string>
+    <string name="web_max_file_size">Maximal 250 MiB pro Datei.</string>
+    <string name="web_name_required">Dateiname fehlt.</string>
+    <string name="web_save_failed">Die Datei konnte nicht vollständig gespeichert werden. Prüfe Speicherplatz und Verbindung.</string>
+    <string name="web_headers_too_large">Header zu groß.</string>
+    <string name="web_invalid_request">Ungültige Anfrage.</string>
+    <string name="web_invalid_header">Ungültiger Header.</string>
+    <string name="web_duplicate_header">Doppelter oder ungültiger Header.</string>
+    <string name="web_chunked_unsupported">Chunked Uploads werden nicht unterstützt.</string>
+    <string name="web_expect_unsupported">Expect wird nicht unterstützt.</string>
+    <string name="web_invalid_length">Ungültige Länge.</string>
+    <string name="web_invalid_path">Ungültiger Pfad.</string>
+    <string name="web_connection_interrupted">Verbindung unterbrochen</string>
+    <string name="web_file_downloaded">Datei abgerufen</string>
+    <string name="web_file_received">Datei empfangen</string>
 </resources>

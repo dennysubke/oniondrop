@@ -1,5 +1,13 @@
 # Changelog
 
+## Android 1.0.1
+
+- Private Tor send and receive pages now follow the app language in all eight supported languages, with English as the fallback.
+- Localized page titles, buttons, accessibility labels, footer, upload status, network errors and HTTP error responses.
+- Language changes apply to subsequent requests during an active sharing session.
+- Added regression coverage for localized HTTP responses and browser upload behavior, plus a live Tor language check in the Android emulator.
+- Includes the pinned Gradle wrapper configuration required by the F-Droid build.
+
 ## 0.2.0
 
 OnionDrop is now a fully standalone, platform-independent Docker application while retaining an optional Umbrel integration.

@@ -30,7 +30,8 @@ public class CoreTest {
             try{store.importFile("truncated.txt","text/plain",3,new ByteArrayInputStream(new byte[5]));throw new AssertionError("incorrect size accepted");}catch(IOException expected){check(store.shared().size()==1,"no truncated shared file");}
             try{store.receive("too-large",DropServer.MAX_FILE+1,new ByteArrayInputStream(new byte[0]));throw new AssertionError("oversize accepted");}catch(IOException expected){checks++;}
             try{store.receive("incomplete",8,new ByteArrayInputStream(new byte[3]));throw new AssertionError("partial accepted");}catch(IOException expected){check(store.received().isEmpty(),"partial upload not committed");}
-            try(DropServer server=new DropServer(store,event->{},new byte[]{(byte)137,80,78,71})){
+            WebText messages=TestMessages.load("en");
+            try(DropServer server=new DropServer(store,event->{},new byte[]{(byte)137,80,78,71},()->messages)){
                 server.setOnion("a".repeat(56)+".onion");server.sending.set(true);server.receiving.set(true);server.start();
                 String send="/s/"+server.sendToken+"/",receive="/r/"+server.receiveToken+"/";
                 check(get(server,"/").startsWith("HTTP/1.1 404"),"root hidden");

@@ -1,0 +1,1 @@
+Private Tor sharing pages now follow the app language in all eight supported languages, with English fallback. Includes translated upload status and error messages, and fixes language changes during an active session.

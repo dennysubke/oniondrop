@@ -104,4 +104,45 @@
     <string name="share_ended">Обмен остановлен.</string>
     <string name="language">Язык</string>
     <string name="system_language">Язык системы</string>
+
+    <!-- Text served to visitors of private Tor links. -->
+    <string name="web_language">ru</string>
+    <string name="web_send_title">Файлы для вас.</string>
+    <string name="web_send_description">С вами поделились этими файлами.</string>
+    <string name="web_save_file">Сохранить файл</string>
+    <string name="web_bytes">байт</string>
+    <string name="web_receive_title">Отправляйте конфиденциально.</string>
+    <string name="web_receive_description">Выберите файлы. Они будут сохранены прямо на устройстве получателя. Не более 250 МиБ на файл.</string>
+    <string name="web_choose_files">Выбрать файлы</string>
+    <string name="web_send_files">Отправить файлы</string>
+    <string name="web_javascript_required">Для загрузки файлов необходимо включить JavaScript в Tor Browser.</string>
+    <string name="web_footer">Прямо с устройства. Через Tor. Ссылка работает только во время сеанса обмена.</string>
+    <string name="web_select_files">Пожалуйста, выберите файлы.</string>
+    <string name="web_too_large">Файл слишком большой:</string>
+    <string name="web_sending">Отправка:</string>
+    <string name="web_transfer_failed">Ошибка передачи:</string>
+    <string name="web_files_sent">Передано файлов:</string>
+    <string name="web_network_failed">Ошибка сети. Проверьте соединение и повторите попытку.</string>
+    <string name="web_invalid_host">Недопустимый хост.</string>
+    <string name="web_method_not_allowed">Метод не разрешён.</string>
+    <string name="web_not_found">Не найдено.</string>
+    <string name="web_redirect">Перенаправление.</string>
+    <string name="web_file_not_found">Файл не найден.</string>
+    <string name="web_origin_not_allowed">Источник не разрешён.</string>
+    <string name="web_upload_header_required">Требуется заголовок загрузки.</string>
+    <string name="web_length_required">Требуется Content-Length.</string>
+    <string name="web_max_file_size">Не более 250 МиБ на файл.</string>
+    <string name="web_name_required">Требуется имя файла.</string>
+    <string name="web_save_failed">Не удалось сохранить файл полностью. Проверьте свободное место и соединение.</string>
+    <string name="web_headers_too_large">Слишком большие заголовки.</string>
+    <string name="web_invalid_request">Некорректный запрос.</string>
+    <string name="web_invalid_header">Некорректный заголовок.</string>
+    <string name="web_duplicate_header">Повторяющийся или некорректный заголовок.</string>
+    <string name="web_chunked_unsupported">Загрузка с кодированием chunked не поддерживается.</string>
+    <string name="web_expect_unsupported">Expect не поддерживается.</string>
+    <string name="web_invalid_length">Некорректная длина.</string>
+    <string name="web_invalid_path">Некорректный путь.</string>
+    <string name="web_connection_interrupted">Соединение прервано</string>
+    <string name="web_file_downloaded">Файл скачан</string>
+    <string name="web_file_received">Файл получен</string>
 </resources>

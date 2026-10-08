@@ -104,4 +104,45 @@
     <string name="share_ended">Condivisione interrotta.</string>
     <string name="language">Lingua</string>
     <string name="system_language">Lingua del sistema</string>
+
+    <!-- Text served to visitors of private Tor links. -->
+    <string name="web_language">it</string>
+    <string name="web_send_title">Un invio per te.</string>
+    <string name="web_send_description">Questi file sono stati condivisi con te.</string>
+    <string name="web_save_file">Salva file</string>
+    <string name="web_bytes">byte</string>
+    <string name="web_receive_title">Invia in privato.</string>
+    <string name="web_receive_description">Scegli i file. Verranno salvati direttamente sul dispositivo del destinatario. Massimo 250 MiB per file.</string>
+    <string name="web_choose_files">Scegli file</string>
+    <string name="web_send_files">Invia file</string>
+    <string name="web_javascript_required">Per caricare i file, JavaScript deve essere abilitato in Tor Browser.</string>
+    <string name="web_footer">Direttamente dal dispositivo. Tramite Tor. Il link funziona solo durante la condivisione.</string>
+    <string name="web_select_files">Scegli i file.</string>
+    <string name="web_too_large">File troppo grande:</string>
+    <string name="web_sending">Invio in corso:</string>
+    <string name="web_transfer_failed">Trasferimento non riuscito:</string>
+    <string name="web_files_sent">File trasferiti:</string>
+    <string name="web_network_failed">Errore di rete. Controlla la connessione e riprova.</string>
+    <string name="web_invalid_host">Host non valido.</string>
+    <string name="web_method_not_allowed">Metodo non consentito.</string>
+    <string name="web_not_found">Non trovato.</string>
+    <string name="web_redirect">Reindirizzamento.</string>
+    <string name="web_file_not_found">File non trovato.</string>
+    <string name="web_origin_not_allowed">Origine non consentita.</string>
+    <string name="web_upload_header_required">È richiesta l’intestazione di caricamento.</string>
+    <string name="web_length_required">È richiesto Content-Length.</string>
+    <string name="web_max_file_size">Massimo 250 MiB per file.</string>
+    <string name="web_name_required">È richiesto il nome del file.</string>
+    <string name="web_save_failed">Impossibile salvare il file completo. Controlla lo spazio di archiviazione e la connessione.</string>
+    <string name="web_headers_too_large">Intestazioni troppo grandi.</string>
+    <string name="web_invalid_request">Richiesta non valida.</string>
+    <string name="web_invalid_header">Intestazione non valida.</string>
+    <string name="web_duplicate_header">Intestazione duplicata o non valida.</string>
+    <string name="web_chunked_unsupported">I caricamenti con codifica chunked non sono supportati.</string>
+    <string name="web_expect_unsupported">Expect non è supportato.</string>
+    <string name="web_invalid_length">Lunghezza non valida.</string>
+    <string name="web_invalid_path">Percorso non valido.</string>
+    <string name="web_connection_interrupted">Connessione interrotta</string>
+    <string name="web_file_downloaded">File scaricato</string>
+    <string name="web_file_received">File ricevuto</string>
 </resources>
