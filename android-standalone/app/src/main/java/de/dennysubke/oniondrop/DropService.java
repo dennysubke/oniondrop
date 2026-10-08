@@ -43,7 +43,7 @@ public final class DropService extends Service {
             if(server==null){
                 until=System.currentTimeMillis()+SESSION_MS;
                 byte[] logo;try(ByteArrayOutputStream out=new ByteArrayOutputStream()){Bitmap bitmap=BitmapFactory.decodeResource(getResources(),R.drawable.oniondrop_logo);if(bitmap==null)throw new IOException("OnionDrop logo missing.");bitmap.compress(Bitmap.CompressFormat.PNG,100,out);logo=out.toByteArray();}
-                server=new DropServer(((DropApp)getApplication()).store(),event->handler.post(()->{if(!stopping&&state.ready())publish("ready",state.host,event,100);}),logo);
+                server=new DropServer(((DropApp)getApplication()).store(),event->handler.post(()->{if(!stopping&&state.ready())publish("ready",state.host,event,100);}),logo,()->WebStrings.snapshot(AppLanguage.wrap(DropService.this)));
                 server.start();
                 wake=((PowerManager)getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"OnionDrop:transfer");wake.acquire(SESSION_MS+15000);
                 handler.postDelayed(expire,SESSION_MS);

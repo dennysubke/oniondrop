@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Test release APK layouts, language selection, Tor publication and real upload."""
 import hashlib
+import html
 import pathlib
 import re
 import subprocess
@@ -116,6 +117,26 @@ try:
     assert expected in ui(), 'Received file SHA-256 does not match'
     screenshot('transfer-sha256-verified')
     print('PASS: independent Tor client uploaded a file; APK SHA-256 matches the sent bytes.')
+    tap('Close')
+    # Reproduce the reviewer's case: the remote page must follow the app language,
+    # also when the language changes while the same sharing session remains active.
+    for tag in ['en', 'de', 'es', 'fr', 'it', 'ru', 'zh', 'ja', 'nl']:
+        locale(tag)
+        expected_language = 'en' if tag == 'nl' else tag
+        resource = pathlib.Path('android-standalone/app/src/main/res') / ('values' if expected_language == 'en' else 'values-' + expected_language) / 'strings.xml'
+        strings = {n.attrib['name']: n.text for n in ET.parse(resource).getroot()}
+        for attempt in range(3):
+            result = subprocess.run(['curl', '--silent', '--show-error', '--fail', '--max-time', '30', '--socks5-hostname', '127.0.0.1:19050', receive_url], capture_output=True)
+            if result.returncode == 0:
+                break
+        assert result.returncode == 0, 'Localized onion page unavailable: ' + result.stderr.decode()
+        page = result.stdout.decode()
+        assert '<html lang="' + expected_language + '">' in page, (tag, 'wrong HTML language')
+        assert strings['web_receive_title'] in html.unescape(page), (tag, 'wrong page title')
+        assert strings['web_send_files'] in html.unescape(page), (tag, 'wrong upload button')
+        assert strings['web_network_failed'] in html.unescape(page), (tag, 'wrong upload status language')
+        (out / ('receive-page-' + tag + '.html')).write_text(page)
+        print('PASS: live onion page language: ' + tag + ' -> ' + expected_language)
 finally:
     if peer:
         peer.terminate()

@@ -104,4 +104,45 @@
     <string name="share_ended">Partage arrêté.</string>
     <string name="language">Langue</string>
     <string name="system_language">Langue du système</string>
+
+    <!-- Text served to visitors of private Tor links. -->
+    <string name="web_language">fr</string>
+    <string name="web_send_title">Un envoi pour vous.</string>
+    <string name="web_send_description">Ces fichiers ont été partagés avec vous.</string>
+    <string name="web_save_file">Enregistrer le fichier</string>
+    <string name="web_bytes">octets</string>
+    <string name="web_receive_title">Envoyez en privé.</string>
+    <string name="web_receive_description">Choisissez des fichiers. Ils seront enregistrés directement sur l’appareil du destinataire. Maximum 250 Mio par fichier.</string>
+    <string name="web_choose_files">Choisir des fichiers</string>
+    <string name="web_send_files">Envoyer les fichiers</string>
+    <string name="web_javascript_required">JavaScript doit être activé dans Tor Browser pour envoyer des fichiers.</string>
+    <string name="web_footer">Directement depuis l’appareil. Via Tor. Le lien fonctionne uniquement pendant le partage.</string>
+    <string name="web_select_files">Veuillez choisir des fichiers.</string>
+    <string name="web_too_large">Fichier trop volumineux :</string>
+    <string name="web_sending">Envoi en cours :</string>
+    <string name="web_transfer_failed">Échec du transfert :</string>
+    <string name="web_files_sent">Fichiers transférés :</string>
+    <string name="web_network_failed">Erreur réseau. Vérifiez la connexion et réessayez.</string>
+    <string name="web_invalid_host">Hôte invalide.</string>
+    <string name="web_method_not_allowed">Méthode non autorisée.</string>
+    <string name="web_not_found">Introuvable.</string>
+    <string name="web_redirect">Redirection.</string>
+    <string name="web_file_not_found">Fichier introuvable.</string>
+    <string name="web_origin_not_allowed">Origine non autorisée.</string>
+    <string name="web_upload_header_required">L’en-tête d’envoi est requis.</string>
+    <string name="web_length_required">Content-Length est requis.</string>
+    <string name="web_max_file_size">Maximum 250 Mio par fichier.</string>
+    <string name="web_name_required">Le nom du fichier est requis.</string>
+    <string name="web_save_failed">Le fichier n’a pas pu être enregistré entièrement. Vérifiez l’espace de stockage et la connexion.</string>
+    <string name="web_headers_too_large">En-têtes trop volumineux.</string>
+    <string name="web_invalid_request">Requête invalide.</string>
+    <string name="web_invalid_header">En-tête invalide.</string>
+    <string name="web_duplicate_header">En-tête en double ou invalide.</string>
+    <string name="web_chunked_unsupported">Les envois avec encodage chunked ne sont pas pris en charge.</string>
+    <string name="web_expect_unsupported">Expect n’est pas pris en charge.</string>
+    <string name="web_invalid_length">Longueur invalide.</string>
+    <string name="web_invalid_path">Chemin invalide.</string>
+    <string name="web_connection_interrupted">Connexion interrompue</string>
+    <string name="web_file_downloaded">Fichier téléchargé</string>
+    <string name="web_file_received">Fichier reçu</string>
 </resources>

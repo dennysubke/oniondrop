@@ -104,4 +104,45 @@
     <string name="share_ended">分享已停止。</string>
     <string name="language">语言</string>
     <string name="system_language">系统语言</string>
+
+    <!-- Text served to visitors of private Tor links. -->
+    <string name="web_language">zh</string>
+    <string name="web_send_title">有人向你分享了文件。</string>
+    <string name="web_send_description">以下文件已与你共享。</string>
+    <string name="web_save_file">保存文件</string>
+    <string name="web_bytes">字节</string>
+    <string name="web_receive_title">私密发送。</string>
+    <string name="web_receive_description">选择文件。文件将直接保存在接收方的设备上。每个文件最大 250 MiB。</string>
+    <string name="web_choose_files">选择文件</string>
+    <string name="web_send_files">发送文件</string>
+    <string name="web_javascript_required">上传文件需要在 Tor Browser 中启用 JavaScript。</string>
+    <string name="web_footer">直接来自设备。通过 Tor 传输。链接仅在共享期间有效。</string>
+    <string name="web_select_files">请选择文件。</string>
+    <string name="web_too_large">文件过大：</string>
+    <string name="web_sending">正在发送：</string>
+    <string name="web_transfer_failed">传输失败：</string>
+    <string name="web_files_sent">已传输的文件数：</string>
+    <string name="web_network_failed">网络错误。请检查连接后重试。</string>
+    <string name="web_invalid_host">主机无效。</string>
+    <string name="web_method_not_allowed">不允许使用此方法。</string>
+    <string name="web_not_found">未找到。</string>
+    <string name="web_redirect">正在重定向。</string>
+    <string name="web_file_not_found">未找到文件。</string>
+    <string name="web_origin_not_allowed">不允许此来源。</string>
+    <string name="web_upload_header_required">缺少上传请求头。</string>
+    <string name="web_length_required">需要 Content-Length。</string>
+    <string name="web_max_file_size">每个文件最大 250 MiB。</string>
+    <string name="web_name_required">缺少文件名。</string>
+    <string name="web_save_failed">无法完整保存文件。请检查存储空间和网络连接。</string>
+    <string name="web_headers_too_large">请求头过大。</string>
+    <string name="web_invalid_request">请求无效。</string>
+    <string name="web_invalid_header">请求头无效。</string>
+    <string name="web_duplicate_header">请求头重复或无效。</string>
+    <string name="web_chunked_unsupported">不支持 chunked 编码上传。</string>
+    <string name="web_expect_unsupported">不支持 Expect。</string>
+    <string name="web_invalid_length">长度无效。</string>
+    <string name="web_invalid_path">路径无效。</string>
+    <string name="web_connection_interrupted">连接已中断</string>
+    <string name="web_file_downloaded">文件已下载</string>
+    <string name="web_file_received">已收到文件</string>
 </resources>

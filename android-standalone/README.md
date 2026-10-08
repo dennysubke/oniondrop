@@ -1,4 +1,4 @@
-# OnionDrop for Android · 1.0.0
+# OnionDrop for Android · 1.0.1
 
 OnionDrop is a local-first Android app for sending and receiving files through a temporary Tor v3 onion service. Tor and the transfer server run directly on the phone; no Umbrel server, Orbot account, cloud account, analytics service or advertising SDK is required.
 
@@ -14,6 +14,8 @@ OnionDrop is a local-first Android app for sending and receiving files through a
 - Tor 0.4.9.12 built from pinned Guardian Project source.
 - Languages: German, English, Spanish, Italian, French, Chinese, Japanese and Russian. Choose a language from About → Language, or follow the system language. Android 13+ also exposes the same setting in system app settings.
 
+Private Tor pages use the selected app language too, including upload status and error messages. Unsupported languages fall back to English. Reload a page after changing the app language.
+
 ## Storage and limits
 
 Files are kept in OnionDrop's private app storage. The current limits are 250 MiB per file and 1 GiB / 100 files per send or receive area. App-private files are removed when OnionDrop is uninstalled, so received files that should be kept permanently must be exported first.
@@ -25,6 +27,7 @@ A sharing session lasts at most 30 minutes. Android background restrictions, pow
 Requirements:
 
 - JDK 17
+- Python 3 and Node.js (for the host regression tests)
 - Gradle 8.11.1 or a compatible Gradle version for Android Gradle Plugin 8.9.1
 - Android SDK 35, Build Tools 35.0.0
 - Android NDK 28.2.13676358
@@ -32,7 +35,7 @@ Requirements:
 - Git submodules initialized recursively
 
 ```bash
-git clone --branch codex/android-release-review --recurse-submodules https://github.com/dennysubke/oniondrop.git
+git clone --branch v1.0.1 --recurse-submodules https://github.com/dennysubke/oniondrop.git
 cd oniondrop/android-standalone
 export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/28.2.13676358"
 bash scripts/build-native-tor.sh arm64-v8a x86_64

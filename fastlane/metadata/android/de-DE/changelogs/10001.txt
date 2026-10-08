@@ -1,0 +1,1 @@
+Die privaten Tor-Freigabeseiten folgen jetzt der App-Sprache in allen acht unterstützten Sprachen, mit Englisch als Rückfall. Upload-Status und Fehlermeldungen sind übersetzt. Sprachwechsel werden auch während einer aktiven Sitzung berücksichtigt.
