@@ -12,9 +12,9 @@ RepoType: git
 Repo: https://github.com/dennysubke/oniondrop.git
 
 Builds:
-  - versionName: 1.0.1
-    versionCode: 10001
-    commit: ca80eda9b973722fbc9814181a4526001243a404
+  - versionName: 1.0.2
+    versionCode: 10002
+    commit: c92b9f2795146a97c8edbc297bf1fb57d79045ba
     subdir: android-standalone/app
     submodules: true
     sudo:
@@ -40,5 +40,5 @@ Builds:
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags ^v[0-9]+\.[0-9]+\.[0-9]+$
-CurrentVersion: 1.0.1
-CurrentVersionCode: 10001
+CurrentVersion: 1.0.2
+CurrentVersionCode: 10002
