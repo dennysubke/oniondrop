@@ -1,4 +1,4 @@
-# OnionDrop for Android · 1.0.1
+# OnionDrop for Android · 1.0.2
 
 OnionDrop is a local-first Android app for sending and receiving files through a temporary Tor v3 onion service. Tor and the transfer server run directly on the phone; no Umbrel server, Orbot account, cloud account, analytics service or advertising SDK is required.
 
@@ -35,7 +35,7 @@ Requirements:
 - Git submodules initialized recursively
 
 ```bash
-git clone --branch v1.0.1 --recurse-submodules https://github.com/dennysubke/oniondrop.git
+git clone --branch v1.0.2 --recurse-submodules https://github.com/dennysubke/oniondrop.git
 cd oniondrop/android-standalone
 export ANDROID_NDK_HOME="$ANDROID_HOME/ndk/28.2.13676358"
 bash scripts/build-native-tor.sh arm64-v8a x86_64

@@ -23,14 +23,22 @@
     <string name="file_limit">Fino a 250 MiB per file</string>
     <string name="choose_files">Scegli file</string>
     <string name="start_share">Avvia condivisione</string>
-    <string name="selected_files">%1$d FILE SELEZIONATI</string>
+    <plurals name="selected_files">
+        <item quantity="one">%1$d FILE SELEZIONATO</item>
+        <item quantity="many">%1$d FILE SELEZIONATI</item>
+        <item quantity="other">%1$d FILE SELEZIONATI</item>
+    </plurals>
     <string name="empty_selected_title">Nessun file selezionato.</string>
     <string name="empty_selected_subtitle">I tuoi file restano privati finché non avvii la condivisione.</string>
     <string name="receive_eyebrow">RICEVI</string>
     <string name="receive_title">La tua casella privata.</string>
     <string name="receive_intro">Condividi il link di ricezione. Altri possono inviare file direttamente al tuo telefono.</string>
     <string name="start_receive">Avvia ricezione</string>
-    <string name="received_files">%1$d FILE RICEVUTI</string>
+    <plurals name="received_files">
+        <item quantity="one">%1$d FILE RICEVUTO</item>
+        <item quantity="many">%1$d FILE RICEVUTI</item>
+        <item quantity="other">%1$d FILE RICEVUTI</item>
+    </plurals>
     <string name="empty_receive_title">Il prossimo Drop arriverà qui.</string>
     <string name="empty_receive_subtitle">I file ricevuti vengono salvati solo nell’app.</string>
     <string name="link_ready">Il tuo link è pronto</string>

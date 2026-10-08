@@ -13,6 +13,18 @@ out = pathlib.Path('android-smoke')
 out.mkdir(exist_ok=True)
 package = 'de.dennysubke.oniondrop.standalone'
 peer = None
+# Expected UI output, independent of the resource parser. Exercise Android's
+# quantity selection on real app state, including Russian "few" and "one".
+counter_text = {
+    'en': ('2 FILES SELECTED', '1 FILE RECEIVED'),
+    'de': ('2 DATEIEN AUSGEWÄHLT', '1 DATEI EMPFANGEN'),
+    'es': ('2 ARCHIVOS SELECCIONADOS', '1 ARCHIVO RECIBIDO'),
+    'fr': ('2 FICHIERS SÉLECTIONNÉS', '1 FICHIER REÇU'),
+    'it': ('2 FILE SELEZIONATI', '1 FILE RICEVUTO'),
+    'ru': ('ВЫБРАНО 2 ФАЙЛА', 'ПОЛУЧЕН 1 ФАЙЛ'),
+    'zh': ('已选择 2 个文件', '已接收 1 个文件'),
+    'ja': ('2 個のファイルを選択', '1 個のファイルを受信'),
+}
 
 def adb(*args):
     return subprocess.check_output(['adb', *args], timeout=45)
@@ -36,6 +48,23 @@ def tap(label):
 def locale(tag):
     adb('shell', 'cmd', 'locale', 'set-app-locales', package, '--user', '0', '--locales', tag)
     time.sleep(2)
+
+def expect_text(label):
+    deadline = time.monotonic() + 12
+    while time.monotonic() < deadline:
+        if any(n.get('text') == label for n in ET.fromstring(ui()).iter('node')):
+            return
+        time.sleep(1)
+    raise AssertionError('Expected visible text: ' + label)
+
+def pick_fixture(name):
+    path = out / name
+    path.write_text('OnionDrop file-counter regression fixture\n')
+    adb('push', str(path), '/sdcard/Download/' + name)
+    tap('Choose files')
+    tap('Show roots')
+    tap('Downloads')
+    tap(name)
 
 def nav_check(tag):
     resource = pathlib.Path('android-standalone/app/src/main/res') / ('values' if tag=='en' else 'values-'+tag) / 'strings.xml'
@@ -81,7 +110,17 @@ try:
     adb('shell', 'wm', 'density', 'reset')
     adb('shell', 'settings', 'put', 'system', 'font_scale', '1.0')
     locale('en')
-    tap('Receive files')
+    tap('Send')
+    expect_text('0 FILES SELECTED')
+    pick_fixture('counter-one.txt')
+    expect_text('1 FILE SELECTED')
+    screenshot('counter-selected-one-en')
+    pick_fixture('counter-two.txt')
+    expect_text('2 FILES SELECTED')
+    screenshot('counter-selected-two-en')
+    print('PASS: selected counter updates for zero, one and two files.')
+    tap('Receive')
+    expect_text('0 FILES RECEIVED')
     screenshot('receive-en')
     tap('Start receiving')
     deadline = time.monotonic() + 260
@@ -111,6 +150,7 @@ try:
         time.sleep(5)
     assert uploaded, 'Real onion upload failed: '+result.stderr.decode()
     time.sleep(3)
+    expect_text('1 FILE RECEIVED')
     tap('Actions for smoke.txt')
     tap('Show SHA-256')
     expected=hashlib.sha256(content).hexdigest()
@@ -125,6 +165,12 @@ try:
         expected_language = 'en' if tag == 'nl' else tag
         resource = pathlib.Path('android-standalone/app/src/main/res') / ('values' if expected_language == 'en' else 'values-' + expected_language) / 'strings.xml'
         strings = {n.attrib['name']: n.text for n in ET.parse(resource).getroot()}
+        tap(strings['nav_send'])
+        expect_text(counter_text[expected_language][0])
+        tap(strings['nav_receive'])
+        expect_text(counter_text[expected_language][1])
+        screenshot('counter-received-one-' + tag)
+        print('PASS: localized selected and received counters: ' + tag)
         for attempt in range(3):
             result = subprocess.run(['curl', '--silent', '--show-error', '--fail', '--max-time', '30', '--socks5-hostname', '127.0.0.1:19050', receive_url], capture_output=True)
             if result.returncode == 0:
@@ -137,6 +183,12 @@ try:
         assert strings['web_network_failed'] in html.unescape(page), (tag, 'wrong upload status language')
         (out / ('receive-page-' + tag + '.html')).write_text(page)
         print('PASS: live onion page language: ' + tag + ' -> ' + expected_language)
+    locale('en')
+    result = subprocess.run(['curl', '--silent', '--show-error', '--fail', '--max-time', '30', '--socks5-hostname', '127.0.0.1:19050', '-H', 'X-OnionDrop-Upload: 1', '--data-binary', '@' + str(out/'smoke.txt'), receive_url + 'upload?name=smoke-two.txt'], capture_output=True)
+    assert result.returncode == 0, 'Second onion upload failed: ' + result.stderr.decode()
+    expect_text('2 FILES RECEIVED')
+    screenshot('counter-received-two-en')
+    print('PASS: received counter updates for zero, one and two files.')
 finally:
     if peer:
         peer.terminate()

@@ -25,7 +25,10 @@
     <string name="file_limit">Up to 250 MiB per file</string>
     <string name="choose_files">Choose files</string>
     <string name="start_share">Start sharing</string>
-    <string name="selected_files">%1$d FILES SELECTED</string>
+    <plurals name="selected_files">
+        <item quantity="one">%1$d FILE SELECTED</item>
+        <item quantity="other">%1$d FILES SELECTED</item>
+    </plurals>
     <string name="empty_selected_title">Nothing selected yet.</string>
     <string name="empty_selected_subtitle">Your files stay private until you start sharing.</string>
     <string name="local_copy_note">The app creates a local copy. You can remove the selection without deleting the original.</string>
@@ -34,7 +37,10 @@
     <string name="receive_intro">Share your receive link. Others can send files directly to your phone.</string>
     <string name="start_receive">Start receiving</string>
     <string name="receive_browser_note">Your link opens in Tor Browser. Visitors cannot see files you already received.</string>
-    <string name="received_files">%1$d FILES RECEIVED</string>
+    <plurals name="received_files">
+        <item quantity="one">%1$d FILE RECEIVED</item>
+        <item quantity="other">%1$d FILES RECEIVED</item>
+    </plurals>
     <string name="empty_receive_title">Your next drop will arrive here.</string>
     <string name="empty_receive_subtitle">Received files are stored only inside the app.</string>
     <string name="link_ready">Your link is ready</string>

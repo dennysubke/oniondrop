@@ -83,7 +83,7 @@ public final class MainActivity extends Activity {
             LinearLayout select=card(content);GradientDrawable border=background(0xff20172c,22);border.setStroke(dp(1),0xff705084,dp(5),dp(5));select.setBackground(border);gap(select,4);center(select,files.isEmpty()?gs(R.string.send_question):gs(R.string.send_add_more),17,WHITE,true);gap(select,8);center(select,gs(R.string.file_limit),12,MUTED,false);gap(select,18);full(select,gs(R.string.choose_files),"plus",true,this::pick);
             if(!files.isEmpty()){full(content,gs(R.string.start_share),"send",true,()->start(DropService.START_SEND));gap(content,21);}
         }
-        section(gs(R.string.selected_files,files.size()));
+        section(getResources().getQuantityString(R.plurals.selected_files,files.size(),files.size()));
         if(files.isEmpty())empty(gs(R.string.empty_selected_title),gs(R.string.empty_selected_subtitle),"folder");
         for(DropFile f:files)fileCard(f,true);
         if(!s.sending&&!files.isEmpty()){gap(content,6);label(content,gs(R.string.local_copy_note),11,MUTED,false);}
@@ -92,7 +92,7 @@ public final class MainActivity extends Activity {
         DropService.State s=DropService.state();List<DropFile> files=store.received();
         title(gs(R.string.receive_eyebrow),gs(R.string.receive_title),gs(R.string.receive_intro));
         if(s.receiving)sessionCard(false);else{full(content,gs(R.string.start_receive),"receive",true,()->start(DropService.START_RECEIVE));gap(content,17);label(content,gs(R.string.receive_browser_note),12,MUTED,false);gap(content,19);}
-        section(gs(R.string.received_files,files.size()));if(files.isEmpty())empty(gs(R.string.empty_receive_title),gs(R.string.empty_receive_subtitle),"receive");for(DropFile f:files)fileCard(f,false);
+        section(getResources().getQuantityString(R.plurals.received_files,files.size(),files.size()));if(files.isEmpty())empty(gs(R.string.empty_receive_title),gs(R.string.empty_receive_subtitle),"receive");for(DropFile f:files)fileCard(f,false);
     }
     private void sessionCard(boolean send){
         DropService.State s=DropService.state();LinearLayout box=card(content);box.setBackground(gradient(0xff2b1d3c,0xff1c1527,22));label(box,s.ready()?"●  "+gs(R.string.link_ready):"●  "+gs(R.string.tor_progress,s.progress),13,s.ready()?GREEN:PURPLE,true);gap(box,13);

@@ -1,5 +1,11 @@
 # Changelog
 
+## Android 1.0.2
+
+- Use Android quantity resources for selected and received file counters in all eight languages.
+- Correct singular forms such as "1 FILE SELECTED" and "1 FILE RECEIVED", including Russian one/few/many forms.
+- Pin the F-Droid build recipe to a full source commit hash.
+
 ## Android 1.0.1
 
 - Private Tor send and receive pages now follow the app language in all eight supported languages, with English as the fallback.
