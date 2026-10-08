@@ -64,8 +64,12 @@ def prepare_fixture(name):
 
 def pick_fixture(name):
     tap('Choose files')
-    tap('Show roots')
-    tap('Downloads')
+    # DocumentsUI remembers Downloads after the first selection. Do not open
+    # its drawer again when the file is already visible: the background toolbar
+    # has the same Downloads label and can otherwise intercept a text match.
+    if not any(n.get('text') == name for n in ET.fromstring(ui()).iter('node')):
+        tap('Show roots')
+        tap('Downloads')
     expect_text(name)
     tap(name)
 
@@ -115,8 +119,7 @@ try:
     locale('en')
     tap('Send')
     expect_text('0 FILES SELECTED')
-    # Populate both files before DocumentsUI first queries the directory;
-    # pushing another file later can leave its cached listing out of date.
+    # Prepare the complete fixture set before DocumentsUI first opens.
     prepare_fixture('counter-one.txt')
     prepare_fixture('counter-two.txt')
     pick_fixture('counter-one.txt')
